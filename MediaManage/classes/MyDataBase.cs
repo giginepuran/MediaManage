@@ -16,7 +16,7 @@ namespace MediaManage.classes
     public class MyDataBase:IMyDataBase
     {
         public string Folder { get; set; }
-        public List<Tag> Tags { get; set; }
+        private List<Tag> Tags { get; set; }
         public MyDataBase(string folder)
         {
             this.Folder = folder;
@@ -40,5 +40,14 @@ namespace MediaManage.classes
         {
             return Video.Load(Folder, videoId);
         }
+
+        public List<Tag> GetTags()
+        {
+            var tags = 
+                (from tag in Tags
+                 select tag).ToList();
+            return tags;
+        }
+
     }
 }

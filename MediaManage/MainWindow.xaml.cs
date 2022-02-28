@@ -53,7 +53,7 @@ namespace MediaManage
 
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(db);
+            ChangeTag tagWindow = new ChangeTag(db, this.TextBOX_Tags.Text);
             tagWindow.Show();
         }
 

@@ -6,32 +6,37 @@
         xmlns:local="clr-namespace:MediaManage"
         mc:Ignorable="d"
         Title="ChangeTag" Height="450" Width="400">
-    <Grid x:Name="myDataGrid">
+    <Grid x:Name="FullGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer x:Name="Scroll_CheckBox" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" HorizontalScrollBarVisibility="Auto">
-            <ListBox x:Name="ListBox" ItemsSource="{Binding TagLabels}">
+        <ScrollViewer x:Name="Scroll_CheckBox" Grid.Row="0" Grid.ColumnSpan="2"
+                      HorizontalScrollBarVisibility="Auto">
+            <ListBox x:Name="ListBox" ItemsSource="{Binding CheckBoxBindings}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding TagName}"/>
+                        <StackPanel Orientation="Horizontal" Tag="{Binding TagName}">
+                            <Button Content="x" Foreground="Red" Height="12" Width="12" FontSize="9" Tag="{Binding TagName}"
+                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="DeleteTag"/>
+                            <CheckBox Content="{Binding TagName}" FontSize="12" Tag="{Binding TagName}"
+                                      IsChecked="{Binding IsChecked, Mode=OneWay}" Checked="Check_Tag" Unchecked="Uncheck_Tag" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
 
-        <TextBox x:Name="TextBox_NewTag" Grid.Row="0" Grid.Column="1" FontSize="24" Text="New Tag"
+        <TextBox x:Name="TextBox_NewTag" Grid.Row="1" Grid.Column="0" FontSize="12" Text="NewTag"
                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <Button Grid.Row="1" Grid.Column="1" Content="Add New Tag" 
-                HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="Add_newTag"/>
-        <Button Grid.Row="2" Grid.Column="1" Content="Apply" 
+        <Button Grid.Row="1" Grid.Column="0" Content="Add New Tag" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Click="Add_newTag"/>
+        <Button Grid.Row="1" Grid.Column="2" Content="Apply" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ApplyTagChange"/>
 
 

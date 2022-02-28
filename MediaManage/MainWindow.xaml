@@ -41,7 +41,7 @@
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
         <TextBox x:Name="TextBox_Thumbnail" Text="TextBox_Thumbnail" Grid.Row="2" Grid.Column="1" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-        <TextBox x:Name="TextBOX_Tags"  Text="TextBox_Tags" Grid.Row="3" Grid.Column="1" FontSize="32"
+        <TextBox x:Name="TextBOX_Tags"  Text="" Grid.Row="3" Grid.Column="1" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
         <TextBox x:Name="TextBOX_Location" Text="TextBox_Location" Grid.Row="4" Grid.Column="1" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
