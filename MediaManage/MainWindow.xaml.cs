@@ -25,9 +25,9 @@ namespace MediaManage
     public partial class MainWindow : Window
     {
         internal MyDataBase db;
-        
+
         public MainWindow()
-        {
+        {            
             InitializeComponent();
         }
 
@@ -36,24 +36,9 @@ namespace MediaManage
 
         }
 
-        private void Add2DB(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SelectFolder(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SelectFile(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(db, this.TextBOX_Tags.Text);
+            ChangeTag tagWindow = new ChangeTag(db);
             tagWindow.Show();
         }
 
@@ -68,11 +53,20 @@ namespace MediaManage
             notiWindow.Show();
         }
 
+        private void CheckAll(object sender, RoutedEventArgs e)
+        {
+        }
+
         private void TextBox_GetFolder(object sender, TextChangedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (!Directory.Exists(textBox.Text)) return;
-            db = new MyDataBase(textBox.Text);
+            if (sender is not TextBox tb) return;
+            if (!Directory.Exists(tb.Text)) return;
+            db = new MyDataBase(tb.Text);
+        }
+
+        private void Add2DB(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

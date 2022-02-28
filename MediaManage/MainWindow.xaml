@@ -48,19 +48,14 @@
         <TextBox x:Name="TextBOX_SaveTo" Text="TextBox_SaveTo" Grid.Row="5" Grid.Column="1" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_GetFolder"/>
 
-        <Button Content="Check" Grid.Row="0" Grid.Column="2" FontSize="32"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="CheckID"/>
-        <Button Content="Browse" Grid.Row="2" Grid.Column="2" FontSize="32"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile"/>
-        <Button Content="Change" Grid.Row="3" Grid.Column="2" FontSize="32"
+        <Button x:Name="Button_ChangeTag" Content="ChangeTag" Grid.Row="3" Grid.Column="2" FontSize="32"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="ChangeTag"/>
-        <Button Content="Browse" Grid.Row="4" Grid.Column="2" FontSize="32"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile"/>
-        <Button Content="Browse" Grid.Row="5" Grid.Column="2" FontSize="32"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFolder"/>
-        <Button Content="Add!" Grid.Row="6" Grid.Column="1" FontSize="32"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Add2DB"/>
-        <Button Content="Exit" Grid.Row="6" Grid.Column="2" FontSize="32"
+        <Button x:Name="Button_CheckAll" Content="CheckAll" Grid.Row="6" Grid.Column="1" FontSize="32"
+                HorizontalAlignment="Left" VerticalAlignment="Center" Click="CheckAll"/>
+        <Button x:Name="Button_Add" Content="Add!" Grid.Row="6" Grid.Column="1" FontSize="32"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Add2DB" 
+                IsEnabled="false"/>
+        <Button x:Name="Button_Exit" Content="Exit" Grid.Row="6" Grid.Column="2" FontSize="32"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="Exit"/>
 
 

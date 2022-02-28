@@ -22,7 +22,7 @@ namespace MediaManage.dialogs
     public partial class ChangeTag : Window
     {
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
-        public ChangeTag(MyDataBase db, string txtBoxtxt)
+        public ChangeTag(MyDataBase db)
         {
             InitializeComponent();
             if (db == null)
@@ -37,10 +37,11 @@ namespace MediaManage.dialogs
             }
             else
             {
+                string tagString = ((MainWindow)Application.Current.MainWindow).TextBOX_Tags.Text;
                 List<Tag> tags = db.GetTags();
                 var checkRepeat =
                     from tag in tags
-                    select new CheckBoxBinding(tag.TagName, txtBoxtxt.Split(',').Contains(tag.TagName));
+                    select new CheckBoxBinding(tag.TagName, tagString.Split(',').Contains(tag.TagName));
 
                 CheckBoxBindings = checkRepeat.ToList();
             }
