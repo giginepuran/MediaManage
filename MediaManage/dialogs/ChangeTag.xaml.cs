@@ -16,15 +16,18 @@ using System.Collections.ObjectModel;
 namespace MediaManage.dialogs
 {
     using classes;
+    using subWindow;
     /// <summary>
     /// Interaction logic for ChangeTag.xaml
     /// </summary>
     public partial class ChangeTag : Window
     {
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
-        public ChangeTag(MyDataBase db)
+        private CreateWindow cw;
+        public ChangeTag(MyDataBase db, CreateWindow cw)
         {
             InitializeComponent();
+            this.cw = cw;
             if (db == null)
             {
                 CheckBoxBindings = new List<CheckBoxBinding>(){ 
@@ -33,12 +36,12 @@ namespace MediaManage.dialogs
                                            new CheckBoxBinding("select", false),
                                            new CheckBoxBinding("a", false),
                                            new CheckBoxBinding("database", false)};
-                ((MainWindow)Application.Current.MainWindow).TextBox_Tags.Text = "";
-                ((MainWindow)Application.Current.MainWindow).CheckBoxBindings = this.CheckBoxBindings;
+                cw.TextBox_Tags.Text = "";
+                cw.CheckBoxBindings = this.CheckBoxBindings;
             }
             else
             {
-                this.CheckBoxBindings = ((MainWindow)Application.Current.MainWindow).CheckBoxBindings;
+                this.CheckBoxBindings = cw.CheckBoxBindings;
             }
             this.DataContext = this;
         }
@@ -50,7 +53,7 @@ namespace MediaManage.dialogs
                 where binding.IsChecked == true
                 select $"{binding.TagName}";
             string tagString = string.Join(',', trueTags.ToArray());
-            ((MainWindow)Application.Current.MainWindow).TextBox_Tags.Text = tagString;
+            cw.TextBox_Tags.Text = tagString;
             this.Close();
         }
 

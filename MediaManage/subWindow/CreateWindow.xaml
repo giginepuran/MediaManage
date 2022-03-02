@@ -1,0 +1,71 @@
+﻿<Window x:Class="MediaManage.subWindow.CreateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaManage.subWindow"
+        mc:Ignorable="d"
+        Title="CreateWindow" Height="450" Width="800">
+    <Grid Background="Green">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="VideoID" FontSize="32" Grid.Row="0" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Title" FontSize="32" Grid.Row="1" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Thumbnail" FontSize="32" Grid.Row="2" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Tags" FontSize="32" Grid.Row="3" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Location" FontSize="32" Grid.Row="4" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="DataBase" FontSize="32" Grid.Row="5" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <TextBox x:Name="TextBox_ID" Text="TextBox_VideoID" 
+                 Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_ID_TextChanged"/>
+        <TextBox x:Name="TextBox_Title" Text="TextBox_Title" 
+                 Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="TextBox_Thumbnail" Text="TextBox_Thumbnail" 
+                 Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="TextBox_Tags"  Text="" 
+                 Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" IsReadOnly="True"/>
+        <TextBox x:Name="TextBox_Location" Text="TextBox_Location" 
+                 Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="TextBox_Database" Text="TextBox_Database" 
+                 Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="Load_DataBase"/>
+
+        <Button x:Name="Button_ChangeTag" Content="ChangeTag" Grid.Row="3" Grid.Column="4" FontSize="28"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="ChangeTag"/>
+        <Button x:Name="Button_CheckAll" Content="CheckAll" Grid.Row="6" Grid.Column="1" FontSize="32"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="CheckAll"/>
+        <Button x:Name="Button_Reset" Content="Reset" Grid.Row="6" Grid.Column="2" FontSize="32"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Reset" IsEnabled="False"/>
+        <Button x:Name="Button_Add" Content="Add!" Grid.Row="6" Grid.Column="3" FontSize="32"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Add2DB" 
+                IsEnabled="false"/>
+        <Button x:Name="Button_Exit" Content="Exit" Grid.Row="6" Grid.Column="4" FontSize="32"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Exit"/>
+    </Grid>
+</Window>
