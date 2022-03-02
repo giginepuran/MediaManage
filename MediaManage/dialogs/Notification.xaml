@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaManage.dialogs"
         mc:Ignorable="d"
-        Title="Notification" Height="100" Width="300">
+        Title="Notification" Height="300" Width="300">
     <Grid>
+        <ListBox x:Name="ListBox" ItemsSource="{Binding CheckResultBinding}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="NAME :"/>
+                        <Label Content="information"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <TextBlock x:Name="Information" Text="OK" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Window>

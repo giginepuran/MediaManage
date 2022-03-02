@@ -33,17 +33,12 @@ namespace MediaManage.dialogs
                                            new CheckBoxBinding("select", false),
                                            new CheckBoxBinding("a", false),
                                            new CheckBoxBinding("database", false)};
-                ((MainWindow)Application.Current.MainWindow).TextBOX_Tags.Text = "";
+                ((MainWindow)Application.Current.MainWindow).TextBox_Tags.Text = "";
+                ((MainWindow)Application.Current.MainWindow).CheckBoxBindings = this.CheckBoxBindings;
             }
             else
             {
-                string tagString = ((MainWindow)Application.Current.MainWindow).TextBOX_Tags.Text;
-                List<Tag> tags = db.GetTags();
-                var checkRepeat =
-                    from tag in tags
-                    select new CheckBoxBinding(tag.TagName, tagString.Split(',').Contains(tag.TagName));
-
-                CheckBoxBindings = checkRepeat.ToList();
+                this.CheckBoxBindings = ((MainWindow)Application.Current.MainWindow).CheckBoxBindings;
             }
             this.DataContext = this;
         }
@@ -55,7 +50,8 @@ namespace MediaManage.dialogs
                 where binding.IsChecked == true
                 select $"{binding.TagName}";
             string tagString = string.Join(',', trueTags.ToArray());
-            ((MainWindow)Application.Current.MainWindow).TextBOX_Tags.Text = tagString;
+            ((MainWindow)Application.Current.MainWindow).TextBox_Tags.Text = tagString;
+            this.Close();
         }
 
         private void Add_newTag(object sender, RoutedEventArgs e)

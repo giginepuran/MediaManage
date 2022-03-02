@@ -14,14 +14,20 @@ using System.Windows.Shapes;
 
 namespace MediaManage.dialogs
 {
+    using classes;
     /// <summary>
     /// Interaction logic for Notification.xaml
     /// </summary>
+    /// 
     public partial class Notification : Window
     {
-        public Notification()
+        private List<CheckResultBinding> checkResultBindings;
+        public Notification(List<CheckResultBinding> checkResults)
         {
+            this.checkResultBindings = checkResults;
             InitializeComponent();
+            this.DataContext = this;
         }
     }
+
 }

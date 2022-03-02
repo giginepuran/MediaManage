@@ -12,17 +12,17 @@ namespace MediaManage.classes
         public string VideoId { get; private set; }
         public string Title { get; private set; }
         public string Thumbnail { get; private set; }
+        public string Location { get; private set; }
         public List<Tag> Tags;
-        public Location Location;
+        
 
         public Video(string videoId, string title, string thumbnail, 
-                     string address, string addressType = "default", 
-                     params string[] tags)
+                     string location, params string[] tags)
         {
             this.VideoId = videoId;
             this.Title = title;
             this.Thumbnail = thumbnail;
-            this.Location = new Location(address, addressType);
+            this.Location = location;
             this.Tags = new List<Tag>();
             foreach (string tagName in tags)
                 Tags.Add(new Tag(tagName));
@@ -68,8 +68,7 @@ namespace MediaManage.classes
                 string data = $"{{\"VideoId\":\"{VideoId}\"}}\n" +
                               $"{{\"Title\":\"{Title}\"}}\n" +
                               $"{{\"Thumbnail\":\"{Thumbnail}\"}}\n" +
-                              $"{{\"Address\":\"{Location.Address}\"}}\n" +
-                              $"{{\"AddressType\":\"{Location.AddressType}\"}}\n" +
+                              $"{{\"Location\":\"{Location}\"}}\n" +
                               $"{{\"Tags\":{GetTags()}}}";
                 byte[] info = new UTF8Encoding(true).GetBytes(data);
                 // Add some information to the file.
@@ -93,8 +92,7 @@ namespace MediaManage.classes
                 string videoId = "";
                 string title = "";
                 string thumbnail = "";
-                string address = "";
-                string addressType = "";
+                string location = "";
                 string[] tags = { };
 
                 foreach (string info in infos)
@@ -113,11 +111,8 @@ namespace MediaManage.classes
                         case "Thumbnail":
                             thumbnail = sep[1];
                             break;
-                        case "Address":
-                            address = sep[1];
-                            break;
-                        case "AddressType":
-                            addressType = sep[1];
+                        case "Location":
+                            location = sep[1];
                             break;
                         case "Tags":
                             tags = sep[1].Split(',');
@@ -126,7 +121,7 @@ namespace MediaManage.classes
                             return null;
                     }
                 }
-                return new Video(videoId, title, thumbnail, address, addressType, tags);
+                return new Video(videoId, title, thumbnail, location, tags);
             }
             catch { return null; }
         }
