@@ -8,11 +8,10 @@ namespace MediaManage.classes
 {
     public struct Tag
     {
+        public string TagName { get; private set; }
         public Tag(string tagName)
         {
             this.TagName = tagName;
         }
-
-        public string TagName { get; private set; }
     }
 }

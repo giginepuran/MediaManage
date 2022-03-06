@@ -45,29 +45,29 @@
         <TextBox x:Name="TextBox_DB" Text="dir1;dir2;dir3;...;dirN" FontSize="32"
                  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                 VerticalContentAlignment="Center"/>
-        <TextBox x:Name="TextBox_ID" Text="videoID" FontSize="32"
+                 VerticalContentAlignment="Center" TextChanged="Load_DataBase" />
+        <TextBox x:Name="TextBox_ID" Text="" FontSize="32"
                  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="TextBox_Title" Text="Title" FontSize="32"
+        <TextBox x:Name="TextBox_Title" Text="" FontSize="32"
                  Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="TextBox_Tags" Text="Tags" FontSize="32"
+        <TextBox x:Name="TextBox_Tags" Text="" FontSize="32"
                  Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" IsReadOnly="true"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
         <Button x:Name="Button_ChangeTag" Content="Change" FontSize="32"
                 Grid.Row="5" Grid.Column="5"
-                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="ChangeTag"/>
         <Button x:Name="Button_Search" Content="Search" FontSize="32"
-                Grid.Row="6" Grid.Column="4"
-                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                Grid.Row="6" Grid.Column="4" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="SearchButton_Click"/>
         <Button x:Name="Button_Exit" Content="Exit" FontSize="32"
                 Grid.Row="6" Grid.Column="5"
-                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Exit"/>
         <Button x:Name="Button_CheckAll" Content="CheckAll" FontSize="32"
                 Grid.Row="6" Grid.Column="1"
                 HorizontalAlignment="Center" VerticalAlignment="Center"/>

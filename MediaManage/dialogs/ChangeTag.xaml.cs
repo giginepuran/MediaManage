@@ -22,12 +22,11 @@ namespace MediaManage.dialogs
     /// </summary>
     public partial class ChangeTag : Window
     {
+        TextBox tagTextBox;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
-        private CreateWindow cw;
         public ChangeTag(MyDataBase db, CreateWindow cw)
         {
             InitializeComponent();
-            this.cw = cw;
             if (db == null)
             {
                 CheckBoxBindings = new List<CheckBoxBinding>(){ 
@@ -44,6 +43,29 @@ namespace MediaManage.dialogs
                 this.CheckBoxBindings = cw.CheckBoxBindings;
             }
             this.DataContext = this;
+            this.tagTextBox = cw.TextBox_Tags;
+        }
+
+        public ChangeTag(List<MyDataBase> dbs, ReadWindow rw)
+        {
+            InitializeComponent();
+            if (dbs.Count == 0)
+            {
+                CheckBoxBindings = new List<CheckBoxBinding>(){
+                                           new CheckBoxBinding("You", false),
+                                           new CheckBoxBinding("haven't", false),
+                                           new CheckBoxBinding("select", false),
+                                           new CheckBoxBinding("a", false),
+                                           new CheckBoxBinding("database", false)};
+                rw.TextBox_Tags.Text = "";
+                rw.CheckBoxBindings = this.CheckBoxBindings;
+            }
+            else
+            {
+                this.CheckBoxBindings = rw.CheckBoxBindings;
+            }
+            this.DataContext = this;
+            this.tagTextBox = rw.TextBox_Tags;
         }
 
         private void ApplyTagChange(object sender, RoutedEventArgs e)
@@ -53,7 +75,7 @@ namespace MediaManage.dialogs
                 where binding.IsChecked == true
                 select $"{binding.TagName}";
             string tagString = string.Join(',', trueTags.ToArray());
-            cw.TextBox_Tags.Text = tagString;
+            this.tagTextBox.Text = tagString;
             this.Close();
         }
 

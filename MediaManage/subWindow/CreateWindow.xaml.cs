@@ -23,11 +23,12 @@ namespace MediaManage.subWindow
 
     public partial class CreateWindow : Window
     {
-        internal MyDataBase db;
+        internal MyDataBase db = null;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
 
         public CreateWindow()
         {
+            CheckBoxBindings = new List<CheckBoxBinding>();
             InitializeComponent();
         }
 
@@ -44,8 +45,13 @@ namespace MediaManage.subWindow
 
         private bool CheckID()
         {
+            /// <summary>
+            /// this function will return
+            /// true, if the ID isn't used,
+            /// otherwise return false.
+            /// </summary>
             if (db == null) return false;
-            if (db.Load(this.TextBox_ID.Text) == null)
+            if (db.SearchByID(this.TextBox_ID.Text) == null)
                 return true;
             return false;
         }
@@ -82,17 +88,17 @@ namespace MediaManage.subWindow
         private void Load_DataBase(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox tb) return;
-            if (!Directory.Exists(tb.Text)) return;
+            if (!MyDataBase.IsDatabase(tb.Text)) return;
             tb.Foreground = Brushes.Black;
 
             db = new MyDataBase(tb.Text);
-            string tagString = this.TextBox_Tags.Text;
-            List<Tag> tags = db.GetTags();
-            var checkRepeat =
-                from tag in tags
-                select new CheckBoxBinding(tag.TagName, tagString.Split(',').Contains(tag.TagName));
+            this.TextBox_Tags.Text = "";
 
-            CheckBoxBindings = checkRepeat.ToList();
+            this.CheckBoxBindings = new List<CheckBoxBinding>();
+            foreach (Tag tag in db.GetTags())
+            {
+                CheckBoxBindings.Add(new CheckBoxBinding(tag.TagName, false));
+            }
         }
 
         private void Reset(object sender, RoutedEventArgs e)

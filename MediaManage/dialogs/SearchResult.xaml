@@ -1,0 +1,25 @@
+﻿<Window x:Class="MediaManage.dialogs.SearchResult"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaManage.dialogs"
+        mc:Ignorable="d"
+        Title="SearchResult" Height="450" Width="800">
+    <DataGrid Height="Auto" Width="Auto" ItemsSource="{Binding ResultBindings}" 
+              HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Width="1*" Header="DB"  Binding="{Binding DB}" IsReadOnly="True"/>
+            <DataGridHyperlinkColumn Width="2*"  Header="ID" Binding="{Binding ID}" 
+                                     ContentBinding="{Binding ID, StringFormat=https://youtu.be/{0}}" IsReadOnly="True">
+                <DataGridHyperlinkColumn.ElementStyle>
+                    <Style>
+                        <EventSetter Event="Hyperlink.Click" Handler="DG_Hyperlink_Click"/>
+                    </Style>
+                </DataGridHyperlinkColumn.ElementStyle>
+            </DataGridHyperlinkColumn>
+            <DataGridTextColumn Width="4*" Header="Title" Binding="{Binding Title}" IsReadOnly="True"/>
+            <DataGridTextColumn Width="4*" Header="Tags" Binding="{Binding Tags}" IsReadOnly="True"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</Window>

@@ -7,6 +7,7 @@ using System.IO;
 
 namespace MediaManage.classes
 {
+    using System.Diagnostics;
     public class Video
     {
         public string VideoId { get; private set; }
@@ -25,16 +26,11 @@ namespace MediaManage.classes
             this.Location = location;
             this.Tags = new List<Tag>();
             foreach (string tagName in tags)
+            {
+                if (tagName == "") continue;
                 Tags.Add(new Tag(tagName));
-        }
-
-        private string GetTags()
-        {             
-            string tagInfo = "";
-            for (int i = 0; i < Tags.Count-1; i++)
-                tagInfo += $"\"{Tags[i].TagName}\",";
-            tagInfo += $"\"{Tags.Last().TagName}\"";
-            return tagInfo;
+            }
+                
         }
 
         public bool ValueEquals(object obj)
@@ -65,29 +61,41 @@ namespace MediaManage.classes
         {
             using (FileStream fs = File.Create($"{folder}\\{VideoId}.video"))
             {
+                var tagNames = from tag in Tags
+                               select tag.TagName;
+                string tagInfo = "";
+                foreach (string tagName in tagNames)
+                    tagInfo += $"\"{tagName}\",";
+                if (tagInfo == "")
+                    tagInfo = "\"\"";
+                else
+                    tagInfo = tagInfo.Remove(tagInfo.Length - 1);
+                
                 string data = $"{{\"VideoId\":\"{VideoId}\"}}\n" +
                               $"{{\"Title\":\"{Title}\"}}\n" +
                               $"{{\"Thumbnail\":\"{Thumbnail}\"}}\n" +
                               $"{{\"Location\":\"{Location}\"}}\n" +
-                              $"{{\"Tags\":{GetTags()}}}";
+                              $"{{\"Tags\":{tagInfo}}}";
                 byte[] info = new UTF8Encoding(true).GetBytes(data);
-                // Add some information to the file.
+                // Add video information.
                 fs.Write(info, 0, info.Length);
             }
         }
 
         public static Video Load(string folder, string id)
         {
-            string[] infos;
-            // Open the stream and read it back.
-            try
-            {
-                using (StreamReader sr = File.OpenText($"{folder}\\{id}.video"))
+            string filePath = $"{folder}\\{id}.video";
+            return Video.Load(filePath);
+        }
+        public static Video Load(string filePath)
+        {
+            //try
+            //{
+                string[] infos;
+                using (StreamReader sr = File.OpenText(filePath))
                 {
-                    infos = sr.ReadToEnd().Replace("{", "")
-                                          .Replace("}", "")
-                                          .Replace("\"", "")
-                                          .Split("\n");
+                    Debug.WriteLine(filePath);
+                    infos = sr.ReadToEnd().Split("\n");
                 }
                 string videoId = "";
                 string title = "";
@@ -97,24 +105,25 @@ namespace MediaManage.classes
 
                 foreach (string info in infos)
                 {
-                    var sep = info.Split(':');
+                    var sep = info.Split("\":\"");
                     if (sep.Length != 2)
                         return null;
                     switch (sep[0])
                     {
-                        case "VideoId":
-                            videoId = sep[1];
+                        case "{\"VideoId":
+                            videoId = sep[1].Remove(sep[1].Length-2, 2);
                             break;
-                        case "Title":
-                            title = sep[1];
+                        case "{\"Title":
+                            title = sep[1].Remove(sep[1].Length - 2, 2);
                             break;
-                        case "Thumbnail":
-                            thumbnail = sep[1];
+                        case "{\"Thumbnail":
+                            thumbnail = sep[1].Remove(sep[1].Length - 2, 2);
                             break;
-                        case "Location":
-                            location = sep[1];
+                        case "{\"Location":
+                            location = sep[1].Remove(sep[1].Length - 2, 2);
                             break;
-                        case "Tags":
+                        case "{\"Tags":
+                            sep[1] = sep[1].Replace("\"", "").Replace("}","");
                             tags = sep[1].Split(',');
                             break;
                         default:
@@ -122,8 +131,8 @@ namespace MediaManage.classes
                     }
                 }
                 return new Video(videoId, title, thumbnail, location, tags);
-            }
-            catch { return null; }
+            //}
+            //catch { return null; }
         }
     }
 }
