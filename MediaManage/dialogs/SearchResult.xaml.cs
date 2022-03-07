@@ -43,5 +43,14 @@ namespace MediaManage.dialogs
             if (hl.DataContext is not SearchResultBinding srb) return;
             Process.Start(new ProcessStartInfo($"https://youtu.be/{srb.ID}") { UseShellExecute = true });
         }
+
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is not DataGridRow dgr) return;
+            if (dgr.DataContext is not SearchResultBinding srb) return;
+            MyDataBase db = new MyDataBase(srb.DB);
+            UpdateData ud = new UpdateData(db, srb.ID);
+            ud.ShowDialog();
+        }
     }
 }/*, link.NavigateUri.AbsoluteUri*/

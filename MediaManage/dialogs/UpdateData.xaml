@@ -1,0 +1,73 @@
+﻿<Window x:Class="MediaManage.dialogs.UpdateData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaManage.dialogs"
+        mc:Ignorable="d"
+        Title="Detail Data" Height="360" Width="960"
+        x:Name="Window">
+    <Grid Background="Green">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Image x:Name="Image_Thumbnail" Source="{Binding ThumbnailUrl}"
+               Grid.Row="0" Grid.RowSpan="6" Grid.Column="3" Stretch="Uniform"/>
+        <Label Content="ID" FontSize="32" Grid.Row="1" Grid.Column="0" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="Title" FontSize="32" Grid.Row="2" Grid.Column="0" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="Location" FontSize="32" Grid.Row="3" Grid.Column="0" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="Tags" FontSize="32" Grid.Row="4" Grid.Column="0" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="From Databases:" FontSize="32"
+               Grid.Row="0" Grid.Column="0"
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <TextBox x:Name="TextBox_DB"  Text="{Binding DBPath}" FontSize="32" 
+                 Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 VerticalContentAlignment="Center" IsReadOnly="True" />
+        <TextBox x:Name="TextBox_ID" Text="{Binding IdDealWith}" FontSize="32"
+                 Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                 IsReadOnly="True"/>
+        <TextBox x:Name="TextBox_Title" Text="{Binding VideoTitle}" FontSize="32"
+                 Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="TextBox_Location" Text="{Binding Location}" FontSize="32"
+                 Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="TextBox_Tags" Text="{Binding TagString}" FontSize="32"
+                 Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+
+        <Button x:Name="Button_ChangeTag" Content="Change" FontSize="32" Margin="2,2,2,2"
+                Grid.Row="5" Grid.Column="0" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ChangeTag"/>
+        <Button Grid.Row="5" Grid.Column="1" Content="Update"  FontSize="32" Margin="2,2,2,2"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ApplyUpdate"/>
+        <Button x:Name="Button_Exit" Content="Exit" FontSize="32" Margin="2,2,2,2"
+                Grid.Row="5" Grid.Column="2" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Exit"/>
+        
+    </Grid>
+</Window>

@@ -21,5 +21,11 @@
             <DataGridTextColumn Width="4*" Header="Title" Binding="{Binding Title}" IsReadOnly="True"/>
             <DataGridTextColumn Width="4*" Header="Tags" Binding="{Binding Tags}" IsReadOnly="True"/>
         </DataGrid.Columns>
+
+        <DataGrid.Resources>
+            <Style TargetType="DataGridRow">
+                <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+            </Style>
+        </DataGrid.Resources>
     </DataGrid>
 </Window>

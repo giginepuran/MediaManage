@@ -68,6 +68,28 @@ namespace MediaManage.dialogs
             this.tagTextBox = rw.TextBox_Tags;
         }
 
+        public ChangeTag(MyDataBase db, UpdateData ud)
+        {
+            InitializeComponent();
+            if (db == null)
+            {
+                CheckBoxBindings = new List<CheckBoxBinding>(){
+                                           new CheckBoxBinding("You", false),
+                                           new CheckBoxBinding("haven't", false),
+                                           new CheckBoxBinding("select", false),
+                                           new CheckBoxBinding("a", false),
+                                           new CheckBoxBinding("database", false)};
+                ud.TagString = "";
+                ud.CheckBoxBindings = this.CheckBoxBindings;
+            }
+            else
+            {
+                this.CheckBoxBindings = ud.CheckBoxBindings;
+            }
+            this.DataContext = this;
+            this.tagTextBox = ud.TextBox_Tags;
+        }
+
         private void ApplyTagChange(object sender, RoutedEventArgs e)
         {
             var trueTags =

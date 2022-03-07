@@ -33,29 +33,21 @@ namespace MediaManage.subWindow
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            string idConstraint = this.TextBox_ID.Text;
+            string id = this.TextBox_ID.Text;
             string subTitle = this.TextBox_Title.Text;
-            var tagConstraint = from bindings in CheckBoxBindings
-                                where bindings.IsChecked == true
-                                select new Tag(bindings.TagName);
+            var containTags = (from bindings in CheckBoxBindings
+                               where bindings.IsChecked == true
+                               select new Tag(bindings.TagName)).ToList();
 
             List < (MyDataBase, Video) > results = new List<(MyDataBase, Video)>();
             foreach (MyDataBase db in dbList)
             {
-                if (idConstraint != "")
-                {
-                    Video result = db.videoDictionary[idConstraint];
-                    results.Add((db, result));
-                }
-                else
-                {
-                    var tagFilter = 
-                        from video in db.videoDictionary.Values
-                        where video.Tags.Intersect(tagConstraint).Count() == tagConstraint.Count()
-                        select video;
-                    foreach (Video video in tagFilter)
-                        results.Add((db, video));
-                }   
+                var result = db.SearchByID(id);
+                result = db.SearchByTag(containTags, result);
+                result = db.SearchByTitle(subTitle, result);
+
+                foreach (Video video in result)
+                    results.Add((db, video));
             }
             SearchResult sr = new SearchResult(results);
             sr.ShowDialog();

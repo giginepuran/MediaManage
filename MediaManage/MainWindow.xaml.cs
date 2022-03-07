@@ -40,5 +40,10 @@ namespace MediaManage
             ReadWindow readWindow = new ReadWindow();
             readWindow.ShowDialog();
         }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

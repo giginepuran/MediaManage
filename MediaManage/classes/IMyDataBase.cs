@@ -11,7 +11,7 @@ namespace MediaManage.classes
         void Save(Video video);
         IEnumerable<Video> SearchByTitle(string subTitle);
         IEnumerable<Video> SearchByTag(Tag tag);
-        Video SearchByID(string id);
+        IEnumerable<Video> SearchByID(string id);
         List<Tag> GetTags();
     }
 }
