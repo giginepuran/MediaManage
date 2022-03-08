@@ -79,12 +79,15 @@ namespace MediaManage.dialogs
             switch (tb.Name)
             {
                 case "TextBox_Title":
+                    this.VideoTitle = tb.Text;
                     isSame = originalVideo.Title == tb.Text;
                     break;
                 case "TextBox_Location":
+                    this.Location = tb.Text;
                     isSame = originalVideo.Location == tb.Text;
                     break;
                 case "TextBox_Tags":
+                    this.TagString = tb.Text;
                     isSame = CheckTagExactlySame(originalVideo.GetTagString(), tb.Text);
                     break;
                 default:
@@ -99,7 +102,6 @@ namespace MediaManage.dialogs
 
         private bool CheckTagExactlySame(string tagString1, string tagString2)
         {
-            bool isSame;
             string[] tags1 = tagString1.Split(','), tags2 = tagString2.Split(',');
             var intersect = tags1.Intersect(tags2);
             return intersect.Count() == tags1.Count() && intersect.Count() == tags2.Count();
@@ -108,17 +110,29 @@ namespace MediaManage.dialogs
         private void ResetInfo(object sender, RoutedEventArgs e)
         {
             VideoTitle = originalVideo.Title;
+            this.TextBox_Title.Text = VideoTitle;
             Location = originalVideo.Location;
+            this.TextBox_Location.Text = Location;
             TagString = originalVideo.GetTagString();
+            this.TextBox_Tags.Text = TagString;
             CheckBoxBindings = (from tag in DB.GetTags()
                                 select new CheckBoxBinding(tag.TagName, TagString.Contains(tag.TagName)))
                                .ToList();
+            CheckDiff(this.TextBox_Title, null);
+            CheckDiff(this.TextBox_Location, null);
+            CheckDiff(this.TextBox_Tags, null);
         }
 
         private void DeleteVideo(object sender, RoutedEventArgs e)
         {
             DB.Delete(IdDealWith);
             this.Close();
+        }
+
+        private void Update(object sender, DataTransferEventArgs e)
+        {
+            if (sender is not TextBox tb) return;
+            tb.UpdateLayout();
         }
     }
 }

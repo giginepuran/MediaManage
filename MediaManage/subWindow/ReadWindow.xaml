@@ -54,7 +54,7 @@
                  Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="TextBox_Tags" Text="" FontSize="32"
+        <TextBox x:Name="TextBox_Tags" Text="" FontSize="32" Background="LightGray"
                  Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" IsReadOnly="true"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
@@ -68,13 +68,7 @@
         <Button x:Name="Button_Exit" Content="Exit" FontSize="32"
                 Grid.Row="6" Grid.Column="5"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="Exit"/>
-        <Button x:Name="Button_CheckAll" Content="CheckAll" FontSize="32"
-                Grid.Row="6" Grid.Column="1"
-                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Button x:Name="Button_Reset" Content="Reset" FontSize="32"
-                Grid.Row="6" Grid.Column="2"
-                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        
-        
+
+
     </Grid>
 </Window>

@@ -23,12 +23,13 @@ namespace MediaManage.subWindow
 
     public partial class CreateWindow : Window
     {
-        internal MyDataBase db = null;
+        internal MyDataBase db;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
 
         public CreateWindow()
         {
             CheckBoxBindings = new List<CheckBoxBinding>();
+            db = null;
             InitializeComponent();
         }
 
@@ -51,7 +52,7 @@ namespace MediaManage.subWindow
             /// otherwise return false.
             /// </summary>
             if (db == null) return false;
-            if (db.SearchByID(this.TextBox_ID.Text) == null)
+            if (db.SearchByID(this.TextBox_ID.Text).Count() == 0)
                 return true;
             return false;
         }

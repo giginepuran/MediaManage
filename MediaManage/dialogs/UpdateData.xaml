@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Detail Data" Height="360" Width="960"
         x:Name="Window">
-    <Grid Background="Green">
+    <Grid x:Name="MainGrid" Background="Green">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="1*"/>
@@ -55,7 +55,7 @@
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
         <TextBox x:Name="TextBox_Tags" Text="{Binding TagString}" FontSize="32"
                  Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True" Background="LightGray"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
 
         <Button x:Name="Button_ChangeTag" Content="Change Tags" FontSize="24" Margin="2,2,2,2"

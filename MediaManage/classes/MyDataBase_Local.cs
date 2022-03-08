@@ -27,7 +27,6 @@ namespace MediaManage.classes
             foreach (Video video in newVideos)
             {
                 this.videoDictionary.Add(video.VideoId, video);
-                LoadTags();
             }        
         }
         /// <summary>

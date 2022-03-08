@@ -18,6 +18,7 @@ namespace MediaManage.classes
             this.tags = new Dictionary<string, Tag>();
             this.videoDictionary = new Dictionary<string, Video>();
             LoadVideoDictionary();
+            LoadTags();
         }
     }
 }

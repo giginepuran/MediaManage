@@ -31,6 +31,39 @@ namespace MediaManage.subWindow
             InitializeComponent();
         }
 
+        private void Load_DataBase(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox tb) return;
+            tb.Foreground = Brushes.Black;
+
+            // initialize when databases are changed
+            dbList = new List<MyDataBase>();
+            CheckBoxBindings = new List<CheckBoxBinding>();
+
+            var dbs = from path in tb.Text.Split(';')
+                      where MyDataBase.IsDatabase(path)
+                      select new MyDataBase(path);
+            if (dbs.Count() == 0) return;
+
+            List<Tag> tags = new List<Tag>();
+
+            foreach (var db in dbs)
+            {
+                this.dbList.Add(db);
+                var newTags = from tag in db.tags.Values
+                              where !tags.Contains(tag)
+                              select tag;
+
+                foreach (Tag tag in newTags)
+                    tags.Add(tag);
+            }
+
+            foreach (Tag tag in tags)
+            {
+                CheckBoxBindings.Add(new CheckBoxBinding(tag.TagName, false));
+            }
+        }
+
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             string id = this.TextBox_ID.Text;
@@ -51,39 +84,6 @@ namespace MediaManage.subWindow
             }
             SearchResult sr = new SearchResult(results);
             sr.ShowDialog();
-        }
-
-        private void Load_DataBase(object sender, TextChangedEventArgs e)
-        {
-            if (sender is not TextBox tb) return;
-            tb.Foreground = Brushes.Black;
-
-            // initialize when databases are changed
-            dbList = new List<MyDataBase>();
-            CheckBoxBindings = new List<CheckBoxBinding>();
-
-            var dbs = from path in tb.Text.Split(';')
-                       where MyDataBase.IsDatabase(path)
-                       select new MyDataBase(path);
-            if (dbs.Count() == 0) return;
-
-            List<Tag> tags = new List<Tag>();
-            
-            foreach (var db in dbs)
-            {
-                this.dbList.Add(db);
-                var newTags = from tag in db.tags.Values
-                              where !tags.Contains(tag)
-                              select tag;
-                               
-                foreach (Tag tag in newTags)
-                    tags.Add(tag);
-            }
-            
-            foreach (Tag tag in tags)
-            {
-                CheckBoxBindings.Add(new CheckBoxBinding(tag.TagName, false));
-            }
         }
 
         private void ChangeTag(object sender, RoutedEventArgs e)

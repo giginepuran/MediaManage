@@ -46,13 +46,13 @@
         <TextBox x:Name="TextBox_Thumbnail" Text="TextBox_Thumbnail" 
                  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
-        <TextBox x:Name="TextBox_Tags"  Text="" 
+        <TextBox x:Name="TextBox_Tags"  Text="" Background="LightGray"
                  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" IsReadOnly="True"/>
         <TextBox x:Name="TextBox_Location" Text="TextBox_Location" 
                  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
-        <TextBox x:Name="TextBox_Database" Text="TextBox_Database" 
+        <TextBox x:Name="TextBox_Database" Text="TextBox_Database"
                  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" FontSize="32"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="Load_DataBase"/>
 
