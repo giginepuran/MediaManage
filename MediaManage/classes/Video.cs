@@ -33,27 +33,11 @@ namespace MediaManage.classes
                 
         }
 
-        public bool ValueEquals(object obj)
+        public string GetTagString()
         {
-            var other = obj as Video;
-
-            if (other == null)
-                return false;
-
-            if (other.VideoId != this.VideoId || 
-                other.Thumbnail != this.Thumbnail ||
-                other.Title != this.Title ||
-                !other.Location.Equals(this.Location) ||
-                other.Tags.Count != this.Tags.Count)
-                return false;
-
-            foreach (Tag tag in other.Tags)
-            {
-                if (!this.Tags.Contains(tag))
-                    return false;
-            }
-
-            return true;
+            string tagString = String.Join(",", (from tag in this.Tags
+                                                 select tag.TagName).ToArray());
+            return tagString;
         }
 
 
@@ -89,50 +73,48 @@ namespace MediaManage.classes
         }
         public static Video Load(string filePath)
         {
-            //try
-            //{
-                string[] infos;
-                using (StreamReader sr = File.OpenText(filePath))
-                {
-                    Debug.WriteLine(filePath);
-                    infos = sr.ReadToEnd().Split("\n");
-                }
-                string videoId = "";
-                string title = "";
-                string thumbnail = "";
-                string location = "";
-                string[] tags = { };
+            string[] infos;
+            using (StreamReader sr = File.OpenText(filePath))
+            {
+                Debug.WriteLine($"Loading video from {filePath}");
+                infos = sr.ReadToEnd().Split("\n");
+            }
+            string videoId = "";
+            string title = "";
+            string thumbnail = "";
+            string location = "";
+            string[] tags = { };
 
-                foreach (string info in infos)
+            foreach (string info in infos)
+            {
+                var sep = info.Split("\":\"");
+                if (sep.Length != 2)
+                    return null;
+                switch (sep[0])
                 {
-                    var sep = info.Split("\":\"");
-                    if (sep.Length != 2)
+                    case "{\"VideoId":
+                        videoId = sep[1].Remove(sep[1].Length-2, 2);
+                        break;
+                    case "{\"Title":
+                        title = sep[1].Remove(sep[1].Length - 2, 2);
+                        break;
+                    case "{\"Thumbnail":
+                        thumbnail = sep[1].Remove(sep[1].Length - 2, 2);
+                        break;
+                    case "{\"Location":
+                        location = sep[1].Remove(sep[1].Length - 2, 2);
+                        break;
+                    case "{\"Tags":
+                        sep[1] = sep[1].Replace("\"", "").Replace("}","");
+                        tags = sep[1].Split(',');
+                        break;
+                    default:
+                        Debug.WriteLine($"Something wrong, load infos from {filePath} failed.");
+                        Debug.Assert(false);
                         return null;
-                    switch (sep[0])
-                    {
-                        case "{\"VideoId":
-                            videoId = sep[1].Remove(sep[1].Length-2, 2);
-                            break;
-                        case "{\"Title":
-                            title = sep[1].Remove(sep[1].Length - 2, 2);
-                            break;
-                        case "{\"Thumbnail":
-                            thumbnail = sep[1].Remove(sep[1].Length - 2, 2);
-                            break;
-                        case "{\"Location":
-                            location = sep[1].Remove(sep[1].Length - 2, 2);
-                            break;
-                        case "{\"Tags":
-                            sep[1] = sep[1].Replace("\"", "").Replace("}","");
-                            tags = sep[1].Split(',');
-                            break;
-                        default:
-                            return null;
-                    }
                 }
-                return new Video(videoId, title, thumbnail, location, tags);
-            //}
-            //catch { return null; }
+            }
+            return new Video(videoId, title, thumbnail, location, tags);
         }
     }
 }

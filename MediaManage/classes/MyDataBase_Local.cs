@@ -30,7 +30,11 @@ namespace MediaManage.classes
                 LoadTags();
             }        
         }
-
+        /// <summary>
+        /// Save all tags as pair in dictionary,
+        /// to save comparing time(?)
+        /// <Key,Value> = <Tag.Name,Tag obkect>
+        /// </summary>
         private void LoadTags()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(this.folder + "\\Tags");

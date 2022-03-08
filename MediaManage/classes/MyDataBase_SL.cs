@@ -28,5 +28,14 @@ namespace MediaManage.classes
         {
             return Video.Load(videoPath);
         }
+        public bool Delete(string id)
+        {
+            try
+            {
+                File.Delete($"{this.folder}\\Datas\\{id}.video");
+                return true;
+            }
+            catch { return false; } 
+        }
     }
 }
