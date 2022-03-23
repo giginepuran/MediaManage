@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 using System.Diagnostics;
 
 namespace MediaManage.DataBaseHandler
@@ -38,6 +39,26 @@ namespace MediaManage.DataBaseHandler
                         {
                             Action(reader, obj);
                         }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        public static void SQLToDataBase(string sql, SqlConnectionStringBuilder builder, DataTable dataTable)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+                        SqlDataAdapter da = new SqlDataAdapter(command);
+                        da.Fill(dataTable);
                     }
                 }
             }

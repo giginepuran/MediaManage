@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace MediaManage.dialogs
 {
@@ -19,23 +21,18 @@ namespace MediaManage.dialogs
     /// </summary>
     
     using classes;
-    using System.Diagnostics;
+    using DataBaseHandler;
     public partial class SearchResult : Window
     {
-        public List<SearchResultBinding> ResultBindings { get; set; }
-        public SearchResult(List<(MyDataBase, Video)> results)
+        SqlConnectionStringBuilder? builder;
+        string connectionString;
+        string tagString;
+        public SearchResult(string connectionString, string youtubeID, string title, string tagString)
         {
-            ResultBindings = new List<SearchResultBinding>();
-            InitializeComponent();
-            var bindings =
-                from result in results
-                select new SearchResultBinding(result.Item1.folder, 
-                                               result.Item2.VideoId,
-                                               result.Item2.Title,
-                                               result.Item2.Tags);
-            foreach (var binding in bindings)
-                ResultBindings.Add(binding);
-            this.DataContext = this;
+            string sql_id = "";
+            string sql_tag = "";
+            string sql_title = "";
+            string sql_get = "";
         }
         private void DG_Hyperlink_Click(object sender, RoutedEventArgs e)
         {
@@ -52,5 +49,7 @@ namespace MediaManage.dialogs
             UpdateData ud = new UpdateData(db, srb.ID);
             ud.ShowDialog();
         }
+
+        
     }
 }/*, link.NavigateUri.AbsoluteUri*/

@@ -32,7 +32,7 @@
         <TextBlock x:Name="TextBlock_SearchBy" Text="Search by:" FontSize="32"
                    Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="TextBlock_ByID" Text="videoID" FontSize="32"
+        <TextBlock x:Name="TextBlock_ByID" Text="YoutubeID" FontSize="32"
                    Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock x:Name="TextBlock_ByTitle" Text="Title" FontSize="32"
@@ -45,7 +45,7 @@
         <TextBox x:Name="TextBox_ConnectionString" Text="Server=localhost;Database=MediaManager;Integrated Security=True;" FontSize="32"
                  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" IsReadOnly="True"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                 VerticalContentAlignment="Center" TextChanged="Load_DataBase" />
+                 VerticalContentAlignment="Center"/>
         <TextBox x:Name="TextBox_ID" Text="" FontSize="32"
                  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
