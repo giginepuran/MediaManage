@@ -1,0 +1,9 @@
+SELECT TagID AS TagID
+INTO #TAGIDS
+FROM VideosTags
+WHERE YoutubeID = '__id__'
+
+SELECT VT.TagName
+FROM #TAGIDS as TI
+INNER JOIN VideoTag AS VT
+ON TI.TagID = VT.TagID

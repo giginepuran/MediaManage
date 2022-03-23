@@ -16,11 +16,5 @@ GROUP BY YoutubeID;
 
 DECLARE @num_of_tag INT = (SELECT COUNT(*) FROM #ContainTag);
 SELECT YoutubeID AS YoutubeID
-INTO #ResultID
 FROM #TagCount
 WHERE Frequency = @num_of_tag;
-
-SELECT VsTs.YoutubeID AS YoutubeID, VsTs.TagID AS TagID
-FROM VideosTags AS VsTs
-INNER JOIN #ResultID AS R
-ON VsTs.YoutubeID = R.YoutubeID;

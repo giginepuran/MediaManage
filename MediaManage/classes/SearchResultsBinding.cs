@@ -13,13 +13,11 @@ namespace MediaManage.classes
         public string Title { get; set; }
         public string Tags { get; set; }
 
-        public SearchResultBinding(string db, string id, string title, List<Tag> tags)
+        public SearchResultBinding(string db, string id, string title, string tagString)
         {
             this.DB = db;
             this.ID = id;
             this.Title = title;
-            string tagString = 
-                String.Join(",", ( from tag in tags select tag.TagName).ToArray());
             this.Tags = tagString;
         }
     }

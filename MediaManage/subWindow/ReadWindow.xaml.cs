@@ -35,7 +35,9 @@ namespace MediaManage.subWindow
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            SearchResult sr = new SearchResult(connectionString, 
+                this.TextBox_ID.Text, this.TextBox_Title.Text, this.TextBox_Tags.Text);
+            sr.ShowDialog();
         }
 
         private void ChangeTag(object sender, RoutedEventArgs e)

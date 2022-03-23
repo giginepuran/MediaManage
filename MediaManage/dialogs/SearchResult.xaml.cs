@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Data;
 
 namespace MediaManage.dialogs
 {
@@ -24,16 +25,23 @@ namespace MediaManage.dialogs
     using DataBaseHandler;
     public partial class SearchResult : Window
     {
-        SqlConnectionStringBuilder? builder;
+        public List<SearchResultBinding> ResultBindings { get; set; }
+        SqlConnectionStringBuilder builder;
         string connectionString;
-        string tagString;
+
         public SearchResult(string connectionString, string youtubeID, string title, string tagString)
         {
-            string sql_id = "";
-            string sql_tag = "";
-            string sql_title = "";
-            string sql_get = "";
+            this.connectionString = connectionString;
+            ResultBindings = new List<SearchResultBinding>();
+            builder = DataBaseHandler.DataBaseBuilder(connectionString);
+            var table1 = MediaManager.SQL_SearchByID(youtubeID, builder);
+            var table2 = MediaManager.SQL_SearchBySubTitle(title, builder);
+            var table3 = MediaManager.SQL_SearchByTags(tagString, builder);
+            GetResults(table1, table2, table3);
+            InitializeComponent();
+            this.DataContext = this;
         }
+
         private void DG_Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             if (e.Source is not Hyperlink hl) return;
@@ -50,6 +58,19 @@ namespace MediaManage.dialogs
             ud.ShowDialog();
         }
 
-        
+        private void GetResults(DataTable dt1, DataTable dt2, DataTable dt3)
+        {
+            var results = from table1 in dt1.AsEnumerable()
+                          join table2 in dt2.AsEnumerable() on table1["YoutubeID"] equals table2["YoutubeID"]
+                          join table3 in dt3.AsEnumerable() on table1["YoutubeID"] equals table3["YoutubeID"]
+                          select new{ YoutubeID = table1["YoutubeID"].ToString(), 
+                                      Title = table1["Title"].ToString() };
+            
+            foreach (var result in results)
+            {
+                string tagString = MediaManager.GetAllTagByID(result.YoutubeID, builder);
+                ResultBindings.Add(new SearchResultBinding(connectionString, result.YoutubeID, result.Title, tagString));
+            }
+        }
     }
 }/*, link.NavigateUri.AbsoluteUri*/
