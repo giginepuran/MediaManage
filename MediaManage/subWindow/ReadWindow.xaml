@@ -26,7 +26,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TextBlock_From" Text="From Databases:" FontSize="32"
+        <TextBlock x:Name="TextBlock_From" Text="Connection Strings:" FontSize="32"
                    Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock x:Name="TextBlock_SearchBy" Text="Search by:" FontSize="32"
@@ -42,8 +42,8 @@
                    Grid.Row="5" Grid.Column="1" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBox x:Name="TextBox_DB" Text="dir1;dir2;dir3;...;dirN" FontSize="32"
-                 Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"
+        <TextBox x:Name="TextBox_ConnectionString" Text="Server=localhost;Database=MediaManager;Integrated Security=True;" FontSize="32"
+                 Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" IsReadOnly="True"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" TextChanged="Load_DataBase" />
         <TextBox x:Name="TextBox_ID" Text="" FontSize="32"

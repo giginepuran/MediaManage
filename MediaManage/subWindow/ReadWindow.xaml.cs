@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
 
 namespace MediaManage.subWindow
 {
@@ -22,6 +23,7 @@ namespace MediaManage.subWindow
     /// </summary>
     public partial class ReadWindow : Window
     {
+        string connectionString;
         internal List<MyDataBase> dbList;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
         public ReadWindow()
@@ -29,6 +31,8 @@ namespace MediaManage.subWindow
             dbList = new List<MyDataBase>();
             CheckBoxBindings = new List<CheckBoxBinding>();
             InitializeComponent();
+            //connectionString = "Server=localhost;Database=MediaManager;Integrated Security=True;";
+            connectionString = this.TextBox_ConnectionString.Text;
         }
 
         private void Load_DataBase(object sender, TextChangedEventArgs e)
@@ -88,7 +92,7 @@ namespace MediaManage.subWindow
 
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(this.dbList, this);
+            ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, connectionString);
             tagWindow.ShowDialog();
         }
 

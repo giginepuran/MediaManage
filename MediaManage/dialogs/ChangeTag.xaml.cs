@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace MediaManage.dialogs
 {
@@ -22,50 +24,54 @@ namespace MediaManage.dialogs
     /// </summary>
     public partial class ChangeTag : Window
     {
+        // waiting to remove
         TextBox tagTextBox;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
+        SqlConnectionStringBuilder builder;
+        string tagString;
         public ChangeTag(MyDataBase db, CreateWindow cw)
         {
-            InitializeComponent();
-            if (db == null)
-            {
-                CheckBoxBindings = new List<CheckBoxBinding>(){ 
-                                           new CheckBoxBinding("You", false),
-                                           new CheckBoxBinding("haven't", false),
-                                           new CheckBoxBinding("select", false),
-                                           new CheckBoxBinding("a", false),
-                                           new CheckBoxBinding("database", false)};
-                cw.TextBox_Tags.Text = "";
-                cw.CheckBoxBindings = this.CheckBoxBindings;
-            }
-            else
-            {
-                this.CheckBoxBindings = cw.CheckBoxBindings;
-            }
-            this.DataContext = this;
-            this.tagTextBox = cw.TextBox_Tags;
+            // not yet
         }
 
-        public ChangeTag(List<MyDataBase> dbs, ReadWindow rw)
+        public ChangeTag(TextBox textbox_tags, string connectionString)
         {
             InitializeComponent();
-            if (dbs.Count == 0)
+            this.CheckBoxBindings = new List<CheckBoxBinding>();
+            bool dbConnected;
+            // read all tag in DB
+            try
             {
-                CheckBoxBindings = new List<CheckBoxBinding>(){
-                                           new CheckBoxBinding("You", false),
-                                           new CheckBoxBinding("haven't", false),
-                                           new CheckBoxBinding("select", false),
-                                           new CheckBoxBinding("a", false),
-                                           new CheckBoxBinding("database", false)};
-                rw.TextBox_Tags.Text = "";
-                rw.CheckBoxBindings = this.CheckBoxBindings;
+                builder = new SqlConnectionStringBuilder(connectionString);
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    string sql = "SELECT TagName FROM VideoTag";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                this.CheckBoxBindings.Add(new CheckBoxBinding(reader.GetSqlString(0).ToString(), false));
+                                Debug.WriteLine("TagName: {0}", reader.GetSqlString(0));
+                            }
+                        }
+                    }
+                }
+                
+                dbConnected = true;
             }
-            else
+            catch (SqlException e)
             {
-                this.CheckBoxBindings = rw.CheckBoxBindings;
+                Debug.WriteLine(e.Message);
+                dbConnected = false;
             }
+
+
             this.DataContext = this;
-            this.tagTextBox = rw.TextBox_Tags;
+            this.tagString = textbox_tags.Text;
         }
 
         public ChangeTag(MyDataBase db, UpdateData ud)
