@@ -19,6 +19,7 @@ namespace MediaManage.dialogs
 {
     using classes;
     using subWindow;
+    using DataBaseHandler;
     /// <summary>
     /// Interaction logic for ChangeTag.xaml
     /// </summary>
@@ -27,7 +28,8 @@ namespace MediaManage.dialogs
         // waiting to remove
         TextBox tagTextBox;
         public List<CheckBoxBinding> CheckBoxBindings { get; set; }
-        SqlConnectionStringBuilder builder;
+        SqlConnectionStringBuilder? builder;
+        string connectionString;
         string tagString;
         public ChangeTag(MyDataBase db, CreateWindow cw)
         {
@@ -37,92 +39,41 @@ namespace MediaManage.dialogs
         public ChangeTag(TextBox textbox_tags, string connectionString)
         {
             InitializeComponent();
-            this.CheckBoxBindings = new List<CheckBoxBinding>();
-            bool dbConnected;
-            // read all tag in DB
-            try
+            this.tagTextBox = textbox_tags;
+            this.connectionString = connectionString;
+            tagString = textbox_tags.Text;
+            CheckBoxBindings = new List<CheckBoxBinding>();
+            builder = DataBaseHandler.DataBaseBuilder(connectionString);
+            if (builder != null)
             {
-                builder = new SqlConnectionStringBuilder(connectionString);
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    string sql = "SELECT TagName FROM VideoTag";
-
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-                        connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                this.CheckBoxBindings.Add(new CheckBoxBinding(reader.GetSqlString(0).ToString(), false));
-                                Debug.WriteLine("TagName: {0}", reader.GetSqlString(0));
-                            }
-                        }
-                    }
-                }
-                
-                dbConnected = true;
+                string sql = "SELECT TagName FROM VideoTag";
+                DataBaseHandler.SQLToDataBase(sql, builder, CheckBoxBindings, this.ReadAllTag);
             }
-            catch (SqlException e)
-            {
-                Debug.WriteLine(e.Message);
-                dbConnected = false;
-            }
-
-
             this.DataContext = this;
-            this.tagString = textbox_tags.Text;
         }
 
         public ChangeTag(MyDataBase db, UpdateData ud)
         {
-            InitializeComponent();
-            if (db == null)
-            {
-                CheckBoxBindings = new List<CheckBoxBinding>(){
-                                           new CheckBoxBinding("You", false),
-                                           new CheckBoxBinding("haven't", false),
-                                           new CheckBoxBinding("select", false),
-                                           new CheckBoxBinding("a", false),
-                                           new CheckBoxBinding("database", false)};
-                ud.TagString = "";
-                ud.CheckBoxBindings = this.CheckBoxBindings;
-            }
-            else
-            {
-                this.CheckBoxBindings = ud.CheckBoxBindings;
-            }
-            this.DataContext = this;
-            this.tagTextBox = ud.TextBox_Tags;
+            // not yet
         }
 
         private void ApplyTagChange(object sender, RoutedEventArgs e)
         {
-            var trueTags =
-                from binding in CheckBoxBindings
-                where binding.IsChecked == true
-                select $"{binding.TagName}";
-            string tagString = string.Join(',', trueTags.ToArray());
-            this.tagTextBox.Text = tagString;
-            this.Close();
+            var checkedTags =
+                from checkBoxBinding in CheckBoxBindings
+                where checkBoxBinding.IsChecked == true
+                select checkBoxBinding.TagName;
+            string tagString = string.Join(',', checkedTags.ToArray());
+            this.tagString = tagString;
+            tagTextBox.Text = tagString;
         }
 
         private void Add_newTag(object sender, RoutedEventArgs e)
         {
-            string newTag = this.TextBox_NewTag.Text;
-            foreach (CheckBoxBinding binding in CheckBoxBindings)
-                if (binding.TagName == newTag)
-                    return;
-            CheckBoxBindings.Add(new CheckBoxBinding(newTag, false));
-            UpdateListBox();
         }
 
         private void DeleteTag(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button bn) return;
-            if (bn.DataContext is not CheckBoxBinding source) return;
-            CheckBoxBindings.Remove(source);
-            UpdateListBox();
         }
 
         private void UpdateListBox()
@@ -142,6 +93,16 @@ namespace MediaManage.dialogs
             if (sender is not CheckBox cb) return;
             if (cb.DataContext is not CheckBoxBinding source) return;
             source.IsChecked = false;
+        }
+
+        private void ReadAllTag(SqlDataReader reader, List<CheckBoxBinding> CheckBoxBindings)
+        {
+            var tags = this.tagString.Split(',');
+            while (reader.Read())
+            {
+                string tagName = reader.GetSqlString(0).ToString();
+                CheckBoxBindings.Add(new CheckBoxBinding(tagName, tags.Contains(tagName)));
+            }
         }
     }
 }
