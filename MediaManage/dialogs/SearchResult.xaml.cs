@@ -25,14 +25,14 @@ namespace MediaManage.dialogs
     using DataBaseHandler;
     public partial class SearchResult : Window
     {
-        public List<SearchResultBinding> ResultBindings { get; set; }
+        public List<Info> Infos { get; set; }
         SqlConnectionStringBuilder builder;
         string connectionString;
 
         public SearchResult(string connectionString, string youtubeID, string title, string tagString)
         {
             this.connectionString = connectionString;
-            ResultBindings = new List<SearchResultBinding>();
+            Infos = new List<Info>();
             builder = DataBaseHandler.DataBaseBuilder(connectionString);
             var result = MediaManager.SQL_SearchBy_ITT(builder, youtubeID, title, tagString);
             FoldResultOfITT(connectionString, result);
@@ -43,16 +43,16 @@ namespace MediaManage.dialogs
         private void DG_Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             if (e.Source is not Hyperlink hl) return;
-            if (hl.DataContext is not SearchResultBinding srb) return;
-            Process.Start(new ProcessStartInfo($"https://youtu.be/{srb.ID}") { UseShellExecute = true });
+            if (hl.DataContext is not Info info) return;
+            Process.Start(new ProcessStartInfo($"https://youtu.be/{info.YoutubeID}") { UseShellExecute = true });
         }
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is not DataGridRow dgr) return;
-            if (dgr.DataContext is not SearchResultBinding srb) return;
-            UpdateData ud = new UpdateData(srb);
-            ud.ShowDialog();
+            if (dgr.DataContext is not Info info) return;
+            UpdateData ud = new UpdateData(info);
+            ud.Show();
         }
 
         private void FoldResultOfITT(string connectionString, DataTable dt)
@@ -70,11 +70,15 @@ namespace MediaManage.dialogs
             
             foreach (var result in groupByYoutubeID)
             {
-                ResultBindings.Add(new SearchResultBinding(connectionString, 
-                                                           result.YoutubeID, 
-                                                           result.Title, 
-                                                           String.Join(',', result.Tags) ));
+                Infos.Add(new Info
+                {
+                    ConnectionString = connectionString,
+                    YoutubeID = result.YoutubeID,
+                    Title = result.Title,
+                    TagString = String.Join(',', result.Tags),
+                    ThumbnailUrl = $"https://i.ytimg.com/vi/{result.YoutubeID}/hqdefault.jpg"
+                });
             }
         }
     }
-}/*, link.NavigateUri.AbsoluteUri*/
+}

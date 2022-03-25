@@ -23,17 +23,17 @@ namespace MediaManage.dialogs
     public partial class UpdateData : Window
     { 
         public Info Info { get; set; }
-        private SearchResultBinding oriInfo;
-        public UpdateData(SearchResultBinding info)
+        private Info oriInfo;
+        public UpdateData(Info info)
         {
             InitializeComponent();
             oriInfo = info;
             Info = new Info();
-            Info.ConnectionString = info.DB;
-            Info.YoutubeID = info.ID;
+            Info.ConnectionString = info.ConnectionString;
+            Info.YoutubeID = info.YoutubeID;
             Info.Title = info.Title;
-            Info.ThumbnailUrl = $"https://i.ytimg.com/vi/{info.ID}/hqdefault.jpg";
-            Info.TagString = info.Tags;
+            Info.ThumbnailUrl = info.ThumbnailUrl;
+            Info.TagString = info.TagString;
             DataContext = this;
         }
 
@@ -56,13 +56,13 @@ namespace MediaManage.dialogs
             switch (tb.Name)
             {
                 case "TextBox_ID":
-                    isSame = oriInfo.ID == tb.Text;
+                    isSame = oriInfo.YoutubeID == tb.Text;
                     break;
                 case "TextBox_Title":
                     isSame = oriInfo.Title == tb.Text;
                     break;
                 case "TextBox_Tags":
-                    isSame = CheckTagExactlySame(oriInfo.Tags, tb.Text);
+                    isSame = CheckTagExactlySame(oriInfo.TagString, tb.Text);
                     break;
                 default:
                     Debug.Write("This method should be used by TextBox_Title/Location/Tags only.\n" +
@@ -83,11 +83,11 @@ namespace MediaManage.dialogs
 
         private void ResetInfo(object sender, RoutedEventArgs e)
         {
-            Info.ConnectionString = oriInfo.DB;
-            Info.YoutubeID = oriInfo.ID;
+            Info.ConnectionString = oriInfo.ConnectionString;
+            Info.YoutubeID = oriInfo.YoutubeID;
             Info.Title = oriInfo.Title;
-            Info.ThumbnailUrl = $"https://i.ytimg.com/vi/{oriInfo.ID}/hqdefault.jpg";
-            Info.TagString = oriInfo.Tags;
+            Info.ThumbnailUrl = oriInfo.ThumbnailUrl;
+            Info.TagString = oriInfo.TagString;
         }
 
         private void DeleteVideo(object sender, RoutedEventArgs e)

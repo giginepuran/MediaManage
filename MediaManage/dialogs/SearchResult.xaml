@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:MediaManage.dialogs"
         mc:Ignorable="d"
         Title="SearchResult" Height="450" Width="800">
-    <DataGrid Height="Auto" Width="Auto" ItemsSource="{Binding ResultBindings}" 
+    <DataGrid Height="Auto" Width="Auto" ItemsSource="{Binding Infos}" IsReadOnly="True"
               HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
         <DataGrid.Columns>
-            <DataGridTextColumn Width="1*" Header="DB"  Binding="{Binding DB}" IsReadOnly="True"/>
-            <DataGridHyperlinkColumn Width="2*"  Header="ID" Binding="{Binding ID}" 
-                                     ContentBinding="{Binding ID, StringFormat=https://youtu.be/{0}}" IsReadOnly="True">
+            <DataGridTextColumn Width="1*" Header="DB"  Binding="{Binding ConnectionString}" IsReadOnly="True"/>
+            <DataGridHyperlinkColumn Width="2*"  Header="ID" Binding="{Binding YoutubeID}" 
+                                     ContentBinding="{Binding YoutubeID, StringFormat=https://youtu.be/{0}}" IsReadOnly="True">
                 <DataGridHyperlinkColumn.ElementStyle>
                     <Style>
                         <EventSetter Event="Hyperlink.Click" Handler="DG_Hyperlink_Click"/>
@@ -19,7 +19,7 @@
                 </DataGridHyperlinkColumn.ElementStyle>
             </DataGridHyperlinkColumn>
             <DataGridTextColumn Width="4*" Header="Title" Binding="{Binding Title}" IsReadOnly="True"/>
-            <DataGridTextColumn Width="4*" Header="Tags" Binding="{Binding Tags}" IsReadOnly="True"/>
+            <DataGridTextColumn Width="4*" Header="Tags" Binding="{Binding TagString}" IsReadOnly="True"/>
         </DataGrid.Columns>
 
         <DataGrid.Resources>
