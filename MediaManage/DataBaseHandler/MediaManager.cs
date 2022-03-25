@@ -12,51 +12,18 @@ namespace MediaManage.DataBaseHandler
     public class MediaManager
     {
         static string sqlFolder = @"C:\Users\clay0\source\repos\MediaManageDB\MediaManage\SQL";
-        public static DataTable SQL_SearchByID(string subID, SqlConnectionStringBuilder builder)
+        public static DataTable SQL_SearchBy_ITT(SqlConnectionStringBuilder builder, 
+            string youtubeID, string title, string tagString)
         {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\subID_ID_Video.sql");
-            sql = sql.Replace("__subID__", string.Join(',', subID));
+            string sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy_ITT_template.sql");
+            sql = sql.Replace("__subID__", youtubeID);
+            sql = sql.Replace("__subTitle__", title);
+            var tags = from tag in tagString.Split(',')
+                       select $"N'{tag}'";
+            sql = sql.Replace("'__tags__'", string.Join(',', tags));
             DataTable dt = new DataTable();
             DataBaseHandler.SQLToDataBase(sql, builder, dt);
             return dt;
-        }
-
-        public static DataTable SQL_SearchBySubTitle(string subTitle, SqlConnectionStringBuilder builder)
-        {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\subTitle_Title_Video.sql");
-            sql = sql.Replace("__subTitle__", string.Join(',', subTitle));
-            DataTable dt = new DataTable();
-            DataBaseHandler.SQLToDataBase(sql, builder, dt);
-            return dt;
-        }
-
-        public static DataTable SQL_SearchByTags(string tagString, SqlConnectionStringBuilder builder)
-        {
-            var cat = from tag in tagString.Split(',')
-                      select "N'"+tag+"'";
-            string sql = System.IO.File.ReadAllText(sqlFolder+@"\tags_VideosTags.sql");
-            sql = sql.Replace("'__tags__'", string.Join(',', cat));
-            DataTable dt = new DataTable();
-            DataBaseHandler.SQLToDataBase(sql, builder, dt);
-            return dt;
-        }
-
-        public static string GetAllTagByID(string id, SqlConnectionStringBuilder builder)
-        {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\id_TagsName.sql");
-            sql = sql.Replace("__id__", id);
-            List<string> tagList = new List<string>();
-            DataBaseHandler.SQLToDataBase(sql, builder, tagList, ReadAllTag);
-            return string.Join(',',tagList);
-        }
-
-        private static void ReadAllTag(SqlDataReader reader, List<string> tagList)
-        {
-            while (reader.Read())
-            {
-                string tagName = reader.GetSqlString(0).ToString();
-                tagList.Add(tagName);
-            }
         }
     }
 }

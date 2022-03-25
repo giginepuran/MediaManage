@@ -34,10 +34,8 @@ namespace MediaManage.dialogs
             this.connectionString = connectionString;
             ResultBindings = new List<SearchResultBinding>();
             builder = DataBaseHandler.DataBaseBuilder(connectionString);
-            var table1 = MediaManager.SQL_SearchByID(youtubeID, builder);
-            var table2 = MediaManager.SQL_SearchBySubTitle(title, builder);
-            var table3 = MediaManager.SQL_SearchByTags(tagString, builder);
-            GetResults(table1, table2, table3);
+            var result = MediaManager.SQL_SearchBy_ITT(builder, youtubeID, title, tagString);
+            FoldResultOfITT(connectionString, result);
             InitializeComponent();
             this.DataContext = this;
         }
@@ -58,18 +56,25 @@ namespace MediaManage.dialogs
             ud.ShowDialog();
         }
 
-        private void GetResults(DataTable dt1, DataTable dt2, DataTable dt3)
+        private void FoldResultOfITT(string connectionString, DataTable dt)
         {
-            var results = from table1 in dt1.AsEnumerable()
-                          join table2 in dt2.AsEnumerable() on table1["YoutubeID"] equals table2["YoutubeID"]
-                          join table3 in dt3.AsEnumerable() on table1["YoutubeID"] equals table3["YoutubeID"]
-                          select new{ YoutubeID = table1["YoutubeID"].ToString(), 
-                                      Title = table1["Title"].ToString() };
+            var groupByYoutubeID = from dataRow in dt.AsEnumerable()
+                                   group dataRow by dataRow["YoutubeID"] into mediaInfo
+                                   orderby mediaInfo.Key // Key is ytID
+                                   select new
+                                   {
+                                       YoutubeID = mediaInfo.Key.ToString(),
+                                       Title = mediaInfo.ElementAt(0)["Title"].ToString(),
+                                       Tags = from dataRow in mediaInfo.AsEnumerable()
+                                              select dataRow["TagName"]
+                                   };
             
-            foreach (var result in results)
+            foreach (var result in groupByYoutubeID)
             {
-                string tagString = MediaManager.GetAllTagByID(result.YoutubeID, builder);
-                ResultBindings.Add(new SearchResultBinding(connectionString, result.YoutubeID, result.Title, tagString));
+                ResultBindings.Add(new SearchResultBinding(connectionString, 
+                                                           result.YoutubeID, 
+                                                           result.Title, 
+                                                           String.Join(',', result.Tags) ));
             }
         }
     }
