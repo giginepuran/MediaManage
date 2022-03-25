@@ -7,16 +7,15 @@
         mc:Ignorable="d"
         Title="Detail Data" Height="360" Width="960"
         x:Name="Window">
-    <Grid x:Name="MainGrid" Background="Green">
+    <Grid x:Name="MainGrid" Background="Green" DataContext="{Binding Info, Mode=TwoWay}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
@@ -24,52 +23,44 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="Image_Thumbnail" Source="{Binding ThumbnailUrl}"
+        <Image x:Name="Image_Thumbnail" Source="{Binding ThumbnailUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Stretch="Uniform"/>
-        <Label Content="ID" FontSize="32" Grid.Row="1" Grid.Column="1" 
+        <Label Content="YoutubeID" FontSize="32" Grid.Row="1" Grid.Column="1" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label Content="Title" FontSize="32" Grid.Row="2" Grid.Column="1" 
-               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label Content="Location" FontSize="32" Grid.Row="3" Grid.Column="1" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label Content="From" FontSize="32"
                Grid.Row="0" Grid.Column="1"
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
-        <TextBox x:Name="TextBox_DB"  Text="{Binding DBPath}" FontSize="32" 
+        <TextBox x:Name="TextBox_DB"  Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="32" 
                  Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Background="LightGray"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" IsReadOnly="True"/>
-        <TextBox x:Name="TextBox_ID" Text="{Binding IdDealWith}" FontSize="32"
-                 Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Background="LightGray"
+        <TextBox x:Name="TextBox_ID" Text="{Binding YoutubeID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="32"
+                 Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                 IsReadOnly="True"/>
-        <TextBox x:Name="TextBox_Title" Text="{Binding VideoTitle}" FontSize="32"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
+        <TextBox x:Name="TextBox_Title" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="32"
                  Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
-        <TextBox x:Name="TextBox_Location" Text="{Binding Location}" FontSize="32"
-                 Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
-        <TextBox x:Name="TextBox_Tags" Text="{Binding TagString}" FontSize="32"
-                 Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True" Background="LightGray"
+        <TextBox x:Name="TextBox_Tags" Text="{Binding TagString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="32"
+                 Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True" Background="LightGray"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="CheckDiff"/>
 
-        <Button x:Name="Button_ChangeTag" Content="Change Tags" FontSize="24" Margin="2,2,2,2"
-                Grid.Row="4" Grid.Column="1" 
+        <Button x:Name="Button_ChangeTag" Content="Change Tags" FontSize="24" Margin="10,8,10,8"
+                Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ChangeTag"/>
         <Button x:Name="Button_Reset" Content="Reset" FontSize="32" Margin="2,2,2,2"
-                Grid.Row="5" Grid.Column="1" 
+                Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ResetInfo"/>
-        <Button Grid.Row="5" Grid.Column="2" Content="Update"  FontSize="32" Margin="2,2,2,2"
+        <Button Grid.Row="4" Grid.Column="2" Content="Update"  FontSize="32" Margin="2,2,2,2"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Foreground="Orange" Click="ApplyUpdate"/>
         <Button x:Name="Button_Delete" Content="Delete" FontSize="32" Margin="2,2,2,2"
-                Grid.Row="5" Grid.Column="3" Foreground="Red"
+                Grid.Row="4" Grid.Column="3" Foreground="Red"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="DeleteVideo"/>
-        
     </Grid>
 </Window>

@@ -21,74 +21,48 @@ namespace MediaManage.dialogs
 
     using classes;
     public partial class UpdateData : Window
-    {
-        // property for binding with XAML (readonly)
-        public string DBPath { get; set; }
-        public string IdDealWith { get; set; }
-        public string ThumbnailUrl { get; set; }
-        // property for binding with XAML (not readonly)
-        public string VideoTitle { get; set; }
-        public string Location { get; set; }
-        public string TagString { get; set; }
-        //
-        private MyDataBase DB;
-        public Video originalVideo { get; set; }
-        public List<CheckBoxBinding> CheckBoxBindings { get; set; }
-        public UpdateData(MyDataBase db, string id)
+    { 
+        public Info Info { get; set; }
+        private SearchResultBinding oriInfo;
+        public UpdateData(SearchResultBinding info)
         {
             InitializeComponent();
-            DB = db;
-            originalVideo = db.videoDictionary[id];
-
-            DBPath = db.folder;
-            IdDealWith = id;
-            ThumbnailUrl = $"https://i.ytimg.com/vi/{id}/hqdefault.jpg";
-            VideoTitle = originalVideo.Title;
-            Location = originalVideo.Location;
-            TagString = originalVideo.GetTagString();
-            CheckBoxBindings = (from tag in db.GetTags()
-                                select new CheckBoxBinding(tag.TagName, TagString.Contains(tag.TagName)))
-                               .ToList();
-
+            oriInfo = info;
+            Info = new Info();
+            Info.ConnectionString = info.DB;
+            Info.YoutubeID = info.ID;
+            Info.Title = info.Title;
+            Info.ThumbnailUrl = $"https://i.ytimg.com/vi/{info.ID}/hqdefault.jpg";
+            Info.TagString = info.Tags;
             DataContext = this;
         }
 
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(this.DB, this);
+            ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, Info.ConnectionString);
             tagWindow.ShowDialog();
             CheckDiff(this.TextBox_Tags, null);
         }
 
         private void ApplyUpdate(object sender, RoutedEventArgs e)
         {
-            Video newVideo = new Video(IdDealWith, VideoTitle, IdDealWith, Location, TagString.Split(','));
-            DB.Save(newVideo);
             return;
         }
-
-        /// <summary>
-        /// This method used to check 
-        /// whether the video info in TextBox
-        /// is different to original Video object.
-        /// </summary>
+        // compare to original info
         private void CheckDiff(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox tb) return;
             bool isSame;
             switch (tb.Name)
             {
-                case "TextBox_Title":
-                    this.VideoTitle = tb.Text;
-                    isSame = originalVideo.Title == tb.Text;
+                case "TextBox_ID":
+                    isSame = oriInfo.ID == tb.Text;
                     break;
-                case "TextBox_Location":
-                    this.Location = tb.Text;
-                    isSame = originalVideo.Location == tb.Text;
+                case "TextBox_Title":
+                    isSame = oriInfo.Title == tb.Text;
                     break;
                 case "TextBox_Tags":
-                    this.TagString = tb.Text;
-                    isSame = CheckTagExactlySame(originalVideo.GetTagString(), tb.Text);
+                    isSame = CheckTagExactlySame(oriInfo.Tags, tb.Text);
                     break;
                 default:
                     Debug.Write("This method should be used by TextBox_Title/Location/Tags only.\n" +
@@ -109,30 +83,21 @@ namespace MediaManage.dialogs
 
         private void ResetInfo(object sender, RoutedEventArgs e)
         {
-            VideoTitle = originalVideo.Title;
-            this.TextBox_Title.Text = VideoTitle;
-            Location = originalVideo.Location;
-            this.TextBox_Location.Text = Location;
-            TagString = originalVideo.GetTagString();
-            this.TextBox_Tags.Text = TagString;
-            CheckBoxBindings = (from tag in DB.GetTags()
-                                select new CheckBoxBinding(tag.TagName, TagString.Contains(tag.TagName)))
-                               .ToList();
-            CheckDiff(this.TextBox_Title, null);
-            CheckDiff(this.TextBox_Location, null);
-            CheckDiff(this.TextBox_Tags, null);
+            Info.ConnectionString = oriInfo.DB;
+            Info.YoutubeID = oriInfo.ID;
+            Info.Title = oriInfo.Title;
+            Info.ThumbnailUrl = $"https://i.ytimg.com/vi/{oriInfo.ID}/hqdefault.jpg";
+            Info.TagString = oriInfo.Tags;
         }
 
         private void DeleteVideo(object sender, RoutedEventArgs e)
         {
-            DB.Delete(IdDealWith);
-            this.Close();
+            
         }
 
         private void Update(object sender, DataTransferEventArgs e)
         {
-            if (sender is not TextBox tb) return;
-            tb.UpdateLayout();
+            
         }
     }
 }

@@ -51,8 +51,7 @@ namespace MediaManage.dialogs
         {
             if (sender is not DataGridRow dgr) return;
             if (dgr.DataContext is not SearchResultBinding srb) return;
-            MyDataBase db = new MyDataBase(srb.DB);
-            UpdateData ud = new UpdateData(db, srb.ID);
+            UpdateData ud = new UpdateData(srb);
             ud.ShowDialog();
         }
 
