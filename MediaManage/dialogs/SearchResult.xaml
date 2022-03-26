@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MediaManage.dialogs"
         mc:Ignorable="d"
         Title="SearchResult" Height="450" Width="800">
-    <DataGrid Height="Auto" Width="Auto" ItemsSource="{Binding Infos}" IsReadOnly="True"
+    <DataGrid x:Name="InfosGrid" Height="Auto" Width="Auto" ItemsSource="{Binding Infos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"
               HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
         <DataGrid.Columns>
             <DataGridTextColumn Width="1*" Header="DB"  Binding="{Binding ConnectionString}" IsReadOnly="True"/>
@@ -18,8 +18,10 @@
                     </Style>
                 </DataGridHyperlinkColumn.ElementStyle>
             </DataGridHyperlinkColumn>
-            <DataGridTextColumn Width="4*" Header="Title" Binding="{Binding Title}" IsReadOnly="True"/>
-            <DataGridTextColumn Width="4*" Header="Tags" Binding="{Binding TagString}" IsReadOnly="True"/>
+            <DataGridTextColumn Width="4*" Header="Title" IsReadOnly="True"
+                                Binding="{Binding Title}" />
+            <DataGridTextColumn Width="4*" Header="Tags" IsReadOnly="True"
+                                Binding="{Binding TagString}"/>
         </DataGrid.Columns>
 
         <DataGrid.Resources>

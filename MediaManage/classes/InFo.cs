@@ -9,11 +9,11 @@ namespace MediaManage.classes
 {
     public class Info : INotifyPropertyChanged
     {
-        private string _connectionString;
-        private string _thumbnailUrl;
-        private string _title;
-        private string _youtubeID;
-        private string _tagString;
+        private string _connectionString = "";
+        private string _thumbnailUrl = "";
+        private string _title = "";
+        private string _youtubeID = "";
+        private string _tagString = "";
         public string ConnectionString
         {
             get { return _connectionString; }
@@ -51,6 +51,7 @@ namespace MediaManage.classes
             {
                 _youtubeID = value;
                 RaisePropertyChanged("YoutubeID");
+                ThumbnailUrl = $"https://i.ytimg.com/vi/{_youtubeID}/hqdefault.jpg";
             }
         }
 

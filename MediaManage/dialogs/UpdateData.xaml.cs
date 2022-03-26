@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using System.Data;
 using System.Diagnostics;
 
 namespace MediaManage.dialogs
@@ -20,13 +22,16 @@ namespace MediaManage.dialogs
     /// </summary>
 
     using classes;
+    using DataBaseHandler;
     public partial class UpdateData : Window
     { 
         public Info Info { get; set; }
         private Info oriInfo;
-        public UpdateData(Info info)
+        private Window parent;
+        public UpdateData(Info info, Window parent)
         {
             InitializeComponent();
+            this.parent = parent;
             oriInfo = info;
             Info = new Info();
             Info.ConnectionString = info.ConnectionString;
@@ -42,11 +47,6 @@ namespace MediaManage.dialogs
             ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, Info.ConnectionString);
             tagWindow.ShowDialog();
             CheckDiff(this.TextBox_Tags, null);
-        }
-
-        private void ApplyUpdate(object sender, RoutedEventArgs e)
-        {
-            return;
         }
         // compare to original info
         private void CheckDiff(object sender, TextChangedEventArgs e)
@@ -92,12 +92,30 @@ namespace MediaManage.dialogs
 
         private void DeleteVideo(object sender, RoutedEventArgs e)
         {
-            
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(Info.ConnectionString);
+            MediaManager.SQL_DeleteYTID(builder, oriInfo.YoutubeID);
+            if (this.parent is SearchResult sr)
+            {
+                sr.Infos.Remove(oriInfo);
+                sr.InfosGrid.Items.Refresh();
+            }
+            this.Close();
         }
 
-        private void Update(object sender, DataTransferEventArgs e)
+        private void ApplyUpdate(object sender, RoutedEventArgs e)
         {
-            
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(Info.ConnectionString);
+            MediaManager.SQL_UpdateInfo(builder, oriInfo, Info);
+            if (this.parent is SearchResult sr)
+            {
+                sr.Infos = (from info in sr.Infos
+                            select (info.YoutubeID == oriInfo.YoutubeID) ? Info : info).ToList();
+                oriInfo.YoutubeID = Info.YoutubeID;
+                oriInfo.Title = Info.Title;
+                oriInfo.ThumbnailUrl = Info.ThumbnailUrl;
+                oriInfo.TagString = Info.TagString;
+                sr.InfosGrid.Items.Refresh();
+            }
         }
     }
 }

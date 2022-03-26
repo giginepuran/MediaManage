@@ -22,7 +22,6 @@ namespace MediaManage.DataBaseHandler
             {
                 Debug.WriteLine(e.Message);
                 return null;
-
             }
         }
 
@@ -59,6 +58,25 @@ namespace MediaManage.DataBaseHandler
                         connection.Open();
                         SqlDataAdapter da = new SqlDataAdapter(command);
                         da.Fill(dataTable);
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        public static void SQLToDataBase(string sql, SqlConnectionStringBuilder builder)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
                     }
                 }
             }

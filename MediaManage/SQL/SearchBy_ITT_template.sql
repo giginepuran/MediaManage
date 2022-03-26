@@ -9,15 +9,9 @@ SELECT YoutubeID AS YoutubeID, Title AS Title
   WHERE YoutubeID like '%__subID__%';
 
 SELECT YoutubeID AS YoutubeID, Title AS Title
-  INTO #title_match
-  FROM Video
-  WHERE Title LIKE N'%__subTitle__%';
-
-SELECT a.YoutubeID AS YoutubeID, a.Title AS Title
   INTO #Filter1
-  FROM #id_match AS a
-  INNER JOIN #title_match AS b
-  ON a.YoutubeID = b.YoutubeID;
+  FROM #id_match
+  WHERE Title LIKE N'%__subTitle__%';
 
 SELECT TagID AS TagID
   INTO #TagIDs
@@ -41,6 +35,11 @@ SELECT YoutubeID AS YoutubeID
   INTO #Filter2
   FROM #TagCount
   WHERE Frequency = @num_of_tag;
+
+IF @num_of_tag = 0
+  INSERT INTO #Filter2
+  SELECT YoutubeID AS YoutubeID
+  FROM Video;
 
 SELECT a.YoutubeID AS YoutubeID, a.Title AS Title
   INTO #Result

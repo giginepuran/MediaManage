@@ -51,7 +51,7 @@ namespace MediaManage.dialogs
         {
             if (sender is not DataGridRow dgr) return;
             if (dgr.DataContext is not Info info) return;
-            UpdateData ud = new UpdateData(info);
+            UpdateData ud = new UpdateData(info, this);
             ud.Show();
         }
 
