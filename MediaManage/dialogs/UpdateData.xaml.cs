@@ -116,6 +116,9 @@ namespace MediaManage.dialogs
                 oriInfo.TagString = Info.TagString;
                 sr.InfosGrid.Items.Refresh();
             }
+            this.TextBox_ID.Foreground = Brushes.Black;
+            this.TextBox_Title.Foreground = Brushes.Black;
+            this.TextBox_Tags.Foreground = Brushes.Black;
         }
     }
 }

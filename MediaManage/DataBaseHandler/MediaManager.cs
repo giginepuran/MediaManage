@@ -16,7 +16,7 @@ namespace MediaManage.DataBaseHandler
         public static DataTable SQL_SearchBy_ITT(SqlConnectionStringBuilder builder, 
             string youtubeID, string title, string tagString)
         {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy_ITT_template.sql");
+            string sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy\ID_Title_Tag.sql");
             sql = sql.Replace("__subID__", youtubeID);
             sql = sql.Replace("__subTitle__", title);
             var tags = from tag in tagString.Split(',')
@@ -29,7 +29,7 @@ namespace MediaManage.DataBaseHandler
 
         public static void SQL_DeleteYTID(SqlConnectionStringBuilder builder, string youtubeID)
         {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\Delete_YTID_template.sql");
+            string sql = System.IO.File.ReadAllText(sqlFolder + @"\Delete_YTID.sql");
             sql = sql.Replace("__YoutubeID__", youtubeID);
             DataBaseHandler.SQLToDataBase(sql, builder);
         }
@@ -77,12 +77,12 @@ namespace MediaManage.DataBaseHandler
             var removeTags = from tag in oldTags
                              where !both.Contains(tag)
                              select $"N'{tag}'";
-            sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Remove_pairs_template.sql");
+            sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Remove.sql");
             sql = sql.Replace("'__tags__'", string.Join(',', removeTags));
             sql = sql.Replace("__YoutubeID__", newInfo.YoutubeID);
             DataBaseHandler.SQLToDataBase(sql, builder);
 
-            // add to Table - VideosTags
+            // add to Table - VideosTags & Table - VideoTag if there is new tag
             var adds = from tag in newTags
                          where !both.Contains(tag)
                          group tag by tagList.Contains(tag) into g
@@ -90,7 +90,7 @@ namespace MediaManage.DataBaseHandler
                          { 
                              Exist = g.Key,
                              Tags = from tag in g.AsEnumerable() 
-                                    select $"N'{tag}'"
+                                    select $"N'{tag}'" // nvarchar format in sql
                          };
             IEnumerable<string> tags = Enumerable.Empty<string>();
             foreach (var add in adds)
@@ -98,13 +98,14 @@ namespace MediaManage.DataBaseHandler
                 tags = tags.Concat(add.Tags);
                 if (!add.Exist) // add.Exist == true, if tag exists in Table - VideoTag
                 {
-                    sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\CreateTag_template.sql");
+                    sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
                     sql.Replace("__TagName__", string.Join(',', add.Tags));
                     DataBaseHandler.SQLToDataBase(sql, builder);
                 }
             }
-            sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\CreateTag_template.sql");
-            sql.Replace("__TagName__", string.Join(',', tags));
+            sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Add.sql");
+            sql = sql.Replace("'__tags__'", string.Join(',', tags));
+            sql = sql.Replace("__YoutubeID__", newInfo.YoutubeID);
             DataBaseHandler.SQLToDataBase(sql, builder);
         }
 
