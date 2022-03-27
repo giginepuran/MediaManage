@@ -1,8 +1,8 @@
 SELECT YoutubeID AS YoutubeID, Title AS Title
   INTO #id_title_match
   FROM dbo.Video
-  --WHERE YoutubeID like '%__subID__%' AND Title LIKE N'%__subTitle__%';
-  WHERE YoutubeID like '%%' AND Title LIKE N'%%';
+  WHERE YoutubeID like '%__subID__%' AND Title LIKE N'%__subTitle__%';
+  --WHERE YoutubeID like '%%' AND Title LIKE N'%%';
 
 SELECT TagID AS TagID
   INTO #TagIDs

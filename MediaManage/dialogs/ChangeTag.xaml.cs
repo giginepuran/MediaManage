@@ -31,10 +31,6 @@ namespace MediaManage.dialogs
         SqlConnectionStringBuilder? builder;
         string connectionString;
         string tagString;
-        public ChangeTag(MyDataBase db, CreateWindow cw)
-        {
-            // not yet
-        }
 
         public ChangeTag(TextBox textbox_tags, string connectionString)
         {
@@ -50,11 +46,6 @@ namespace MediaManage.dialogs
                 DataBaseHandler.SQLToDataBase(sql, builder, CheckBoxBindings, this.ReadAllTag);
             }
             this.DataContext = this;
-        }
-
-        public ChangeTag(MyDataBase db, UpdateData ud)
-        {
-            // not yet
         }
 
         private void ApplyTagChange(object sender, RoutedEventArgs e)

@@ -34,15 +34,51 @@ namespace MediaManage.DataBaseHandler
             DataBaseHandler.SQLToDataBase(sql, builder);
         }
 
+        public static void SQL_CreateYTID(SqlConnectionStringBuilder builder, Info info)
+        {
+            string sql = "";
+            // add to Table - Video
+            sql = $"INSERT INTO Video(YoutubeID, Title) VALUES('{info.YoutubeID}', N'{info.Title}');";
+            DataBaseHandler.SQLToDataBase(sql, builder);
+
+            // add to Table - VideosTags
+            List<String> tagList = new List<string>();
+            MergeTag(builder, tagList);
+            var adds = from tag in info.TagString.Split(',')
+                       group tag by tagList.Contains(tag) into g
+                       select new
+                       {
+                           Exist = g.Key,
+                           Tags = from tag in g.AsEnumerable()
+                                  select $"N'{tag}'" // nvarchar format in sql
+                       };
+            IEnumerable<string> tags = Enumerable.Empty<string>();
+            foreach (var add in adds)
+            {
+                tags = tags.Concat(add.Tags);
+                if (!add.Exist) // add.Exist == true, if tag exists in Table - VideoTag
+                {
+                    sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
+                    sql.Replace("__TagName__", string.Join(',', add.Tags));
+                    DataBaseHandler.SQLToDataBase(sql, builder);
+                }
+            }
+            sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Add.sql");
+            sql = sql.Replace("'__tags__'", string.Join(',', tags));
+            sql = sql.Replace("__YoutubeID__", info.YoutubeID);
+            DataBaseHandler.SQLToDataBase(sql, builder);
+        }
+
         public static void SQL_UpdateInfo(SqlConnectionStringBuilder builder, Info oldInfo, Info newInfo)
         {
-            Update_Video(builder, oldInfo, newInfo);
             if (oldInfo.YoutubeID != newInfo.YoutubeID)
             {
-                // not yet
+                SQL_DeleteYTID(builder, oldInfo.YoutubeID);
+                SQL_CreateYTID(builder, newInfo);
             }
             else
             {
+                Update_Video(builder, oldInfo, newInfo);
                 Update_VideosTags(builder, oldInfo, newInfo);
             }
         }
@@ -111,7 +147,7 @@ namespace MediaManage.DataBaseHandler
 
         private static void Update_Video(SqlConnectionStringBuilder builder, Info oldInfo, Info newInfo)
         {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\Video\Update_template.sql");
+            string sql = System.IO.File.ReadAllText(sqlFolder + @"\Video\Update.sql");
             sql = sql.Replace("__NewYoutubeID__", newInfo.YoutubeID);
             sql = sql.Replace("__NewTitle__", newInfo.Title);
             sql = sql.Replace("__YoutubeID__", oldInfo.YoutubeID);

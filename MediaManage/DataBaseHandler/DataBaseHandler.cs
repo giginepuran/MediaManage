@@ -16,9 +16,13 @@ namespace MediaManage.DataBaseHandler
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                }
                 return builder;
             }
-            catch (SqlException e)
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
                 return null;
@@ -44,6 +48,29 @@ namespace MediaManage.DataBaseHandler
             catch (SqlException e)
             {
                 Debug.WriteLine(e.Message);
+            }
+        }
+
+        public static string SQLToDataBase(string sql, SqlConnectionStringBuilder builder, Func<SqlDataReader, string> Action)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            return Action(reader);
+                        }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Debug.WriteLine(e.Message);
+                return "";
             }
         }
 

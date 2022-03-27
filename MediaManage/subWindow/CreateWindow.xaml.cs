@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using System.Data;
+using System.Diagnostics;
 
 namespace MediaManage.subWindow
 {
@@ -20,17 +23,24 @@ namespace MediaManage.subWindow
     using System.IO;
     using classes;
     using dialogs;
+    using DataBaseHandler;
 
     public partial class CreateWindow : Window
     {
-        internal MyDataBase db;
-        public List<CheckBoxBinding> CheckBoxBindings { get; set; }
+        public Info Info { get; set; }
+        private SqlConnectionStringBuilder builder;
+
 
         public CreateWindow()
         {
-            CheckBoxBindings = new List<CheckBoxBinding>();
-            db = null;
             InitializeComponent();
+            Info = new Info();
+            Info.ConnectionString = "";
+            Info.YoutubeID = "";
+            Info.Title = "";
+            Info.ThumbnailUrl = "";
+            Info.TagString = "";
+            DataContext = this;
         }
 
         private void Exit(object sender, RoutedEventArgs e)
@@ -40,119 +50,83 @@ namespace MediaManage.subWindow
 
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(db, this);
+            ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, Info.ConnectionString);
             tagWindow.ShowDialog();
         }
 
         private bool CheckID()
         {
-            /// <summary>
-            /// this function will return
-            /// true, if the ID isn't used,
-            /// otherwise return false.
-            /// </summary>
-            if (db == null) return false;
-            if (db.SearchByID(this.TextBox_ID.Text).Count() == 0)
+            if (builder is null)
+                return false;
+            string sql = $"SELECT COUNT(YoutubeID) FROM Video WHERE YoutubeID = '{this.TextBox_ID.Text}'";
+            string result = DataBaseHandler.SQLToDataBase(sql, builder, reader => { 
+                            reader.Read(); 
+                            return reader.GetSqlInt32(0).ToString(); });
+            if (result == "0")
                 return true;
             return false;
         }
 
-        private void CheckAll(object sender, RoutedEventArgs e)
+        private void CheckInfo(object sender, RoutedEventArgs e)
         {
-            bool id_ok = CheckID();
-            bool title_ok = this.TextBox_Title.Text != "";
-            bool thumbnail_ok = this.TextBox_Thumbnail.Text == this.TextBox_ID.Text ||
-                                File.Exists(this.TextBox_Thumbnail.Text);
-            bool location_ok = this.TextBox_Location.Text == this.TextBox_ID.Text ||
-                               File.Exists(this.TextBox_Thumbnail.Text);
-            bool db_ok = db != null;
-
-            this.TextBox_ID.Foreground = id_ok ? Brushes.Green : Brushes.Red;
-            this.TextBox_Title.Foreground = title_ok ? Brushes.Green : Brushes.Red;
-            this.TextBox_Thumbnail.Foreground = thumbnail_ok ? Brushes.Green : Brushes.Red;
-            this.TextBox_Location.Foreground = location_ok ? Brushes.Green : Brushes.Red;
-            this.TextBox_Database.Foreground = db_ok ? Brushes.Green : Brushes.Red;
-
-            if (id_ok && title_ok && thumbnail_ok && db_ok && location_ok)
+            // Server=localhost;Database=MediaManager;Integrated Security=True;
+            // check ConnectionString 
+            builder = DataBaseHandler.DataBaseBuilder(Info.ConnectionString);
+            if (builder is null)
             {
-                this.TextBox_ID.IsReadOnly = true;
-                this.TextBox_Title.IsReadOnly = true;
-                this.TextBox_Thumbnail.IsReadOnly = true;
-                this.TextBox_Location.IsReadOnly = true;
-                this.TextBox_Database.IsReadOnly = true;
-                this.Button_ChangeTag.IsEnabled = false;
-                this.Button_Reset.IsEnabled = true;
-                this.Button_Add.IsEnabled = true;
+                this.TextBox_DB.Foreground = Brushes.Red;
+                if (this.TextBox_DB.Text == "")
+                    this.TextBox_DB.Text = "Invalid Connection String";
+                return;
+            }
+            this.TextBox_DB.Foreground = Brushes.Green;
+
+            // check YTID exists or not, len of YTID must be 11
+            bool idOK;
+            if (this.TextBox_ID.Text.Length != 11)
+            {
+                idOK = false;
+                this.TextBox_ID.Text += "len of YTID must be 11";
+            }
+            else
+                idOK = CheckID();
+            this.TextBox_ID.Foreground = idOK ? Brushes.Green : Brushes.Red;
+
+            // title can't be empty
+            bool titleOK = this.TextBox_Title.Text != "";
+            this.TextBox_Title.Foreground = titleOK ? Brushes.Green : Brushes.Red;
+            if (!titleOK) this.TextBox_Title.Text = "Title can't be empty";
+
+            if (idOK && titleOK)
+            {
+                
+                this.Button_Create.IsEnabled = true;
+                this.Button_Unlock.IsEnabled = true;
+                this.Button_Check.IsEnabled = false;
+                //this.Button_ChangeTag.IsEnabled = false;
+                this.TextBox_DB.IsEnabled = false;
+                this.TextBox_ID.IsEnabled = false;
+                this.TextBox_Title.IsEnabled = false;
             }
         }
-
-        private void Load_DataBase(object sender, TextChangedEventArgs e)
+        private void UnlockInfo(object sender, RoutedEventArgs e)
         {
-            if (sender is not TextBox tb) return;
-            if (!MyDataBase.IsDatabase(tb.Text)) return;
-            tb.Foreground = Brushes.Black;
+            this.Button_Create.IsEnabled = false;
+            this.Button_Unlock.IsEnabled = false;
+            this.Button_Check.IsEnabled = true;
+            //this.Button_ChangeTag.IsEnabled = true;
+            this.TextBox_DB.IsEnabled = true;
+            this.TextBox_ID.IsEnabled = true;
+            this.TextBox_Title.IsEnabled = true;
 
-            db = new MyDataBase(tb.Text);
-            this.TextBox_Tags.Text = "";
-
-            this.CheckBoxBindings = new List<CheckBoxBinding>();
-            foreach (Tag tag in db.GetTags())
-            {
-                CheckBoxBindings.Add(new CheckBoxBinding(tag.TagName, false));
-            }
-        }
-
-        private void Reset(object sender, RoutedEventArgs e)
-        {
-            Default_All();
-        }
-
-        private void Add2DB(object sender, RoutedEventArgs e)
-        {
-            string videoID = this.TextBox_ID.Text;
-            string title = this.TextBox_Title.Text;
-            string thumbnail = this.TextBox_Thumbnail.Text;
-            string location = this.TextBox_Location.Text;
-            string tags = this.TextBox_Tags.Text;
-            Video newVideo = new Video(videoID, title, thumbnail, location, tags.Split(','));
-            db.Save(newVideo);
-
-            Default_All();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is not TextBox tb) return;
-            tb.Foreground = Brushes.Black;
-        }
-
-        private void Default_All()
-        {
+            this.TextBox_DB.Foreground = Brushes.Black;
             this.TextBox_ID.Foreground = Brushes.Black;
             this.TextBox_Title.Foreground = Brushes.Black;
-            this.TextBox_Thumbnail.Foreground = Brushes.Black;
-            this.TextBox_Location.Foreground = Brushes.Black;
-            this.TextBox_Database.Foreground = Brushes.Black;
-
-            this.TextBox_ID.IsReadOnly = false;
-            this.TextBox_Title.IsReadOnly = false;
-            this.TextBox_Thumbnail.IsReadOnly = false;
-            this.TextBox_Location.IsReadOnly = false;
-            this.TextBox_Database.IsReadOnly = false;
-            this.Button_ChangeTag.IsEnabled = true;
-            this.Button_Reset.IsEnabled = false;
-            this.Button_Add.IsEnabled = false;
         }
-
-        private void TextBox_ID_TextChanged(object sender, TextChangedEventArgs e)
+        private void Create(object sender, RoutedEventArgs e)
         {
-            if (sender is not TextBox tb) return;
-            if (tb.Text.Length==11)
-            {
-                this.TextBox_Thumbnail.Text = tb.Text;
-                this.TextBox_Location.Text = tb.Text;
-            }
-            TextBox_TextChanged(tb, e);
+            MediaManager.SQL_CreateYTID(builder, Info);
+            UnlockInfo(null, null);
         }
     }
 }

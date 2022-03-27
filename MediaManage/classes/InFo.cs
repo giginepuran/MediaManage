@@ -51,7 +51,7 @@ namespace MediaManage.classes
             {
                 _youtubeID = value;
                 RaisePropertyChanged("YoutubeID");
-                ThumbnailUrl = $"https://i.ytimg.com/vi/{_youtubeID}/hqdefault.jpg";
+                this.ThumbnailUrl = $"https://i.ytimg.com/vi/{_youtubeID}/hqdefault.jpg";
             }
         }
 
