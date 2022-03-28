@@ -35,7 +35,7 @@ namespace MediaManage.subWindow
         {
             InitializeComponent();
             Info = new Info();
-            Info.ConnectionString = "";
+            Info.ConnectionString = "Server=localhost;Database=MediaManager;Integrated Security=True;";
             Info.YoutubeID = "";
             Info.Title = "";
             Info.ThumbnailUrl = "";
@@ -69,7 +69,6 @@ namespace MediaManage.subWindow
 
         private void CheckInfo(object sender, RoutedEventArgs e)
         {
-            // Server=localhost;Database=MediaManager;Integrated Security=True;
             // check ConnectionString 
             builder = DataBaseHandler.DataBaseBuilder(Info.ConnectionString);
             if (builder is null)
