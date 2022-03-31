@@ -31,7 +31,7 @@ namespace MediaManage.DataBaseHandler
             }
         }
 
-        public static void SQLToDataBase<T>(string sql, SqlConnectionStringBuilder builder, T obj, Action<SqlDataReader,T> Action)
+        public static void SQLToDataBase<T>(string sql, SqlConnectionStringBuilder builder, T obj, Action<SqlDataReader,T> action)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace MediaManage.DataBaseHandler
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            Action(reader, obj);
+                            action(reader, obj);
                         }
                     }
                 }
@@ -53,7 +53,7 @@ namespace MediaManage.DataBaseHandler
             }
         }
 
-        public static string SQLToDataBase(string sql, SqlConnectionStringBuilder builder, Func<SqlDataReader, string> Action)
+        public static string SQLToDataBase(string sql, SqlConnectionStringBuilder builder, Func<SqlDataReader, string> func)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace MediaManage.DataBaseHandler
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            return Action(reader);
+                            return func(reader);
                         }
                     }
                 }
