@@ -26,10 +26,10 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TextBlock_From" Text="Connection Strings:" FontSize="32"
+        <TextBlock x:Name="TextBlock_From" Text="Connection Strings (separate each string by , )" FontSize="32"
                    Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="TextBlock_SearchBy" Text="Search by:" FontSize="32"
+        <TextBlock x:Name="TextBlock_SearchBy" Text="Search by" FontSize="32"
                    Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock x:Name="TextBlock_ByID" Text="YoutubeID" FontSize="32"
@@ -42,8 +42,9 @@
                    Grid.Row="5" Grid.Column="1" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBox x:Name="TextBox_ConnectionString" Text="Server=localhost;Database=MediaManager;Integrated Security=True;" FontSize="32"
-                 Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" IsReadOnly="True"
+        <TextBox x:Name="TextBox_ConnectionString" 
+                 Text="Server=localhost;Database=MediaManager;Integrated Security=True;,Server=localhost;Database=EmptyMM;Integrated Security=True;"
+                 FontSize="32" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  VerticalContentAlignment="Center"/>
         <TextBox x:Name="TextBox_ID" Text="" FontSize="32"

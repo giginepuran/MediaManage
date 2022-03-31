@@ -16,10 +16,12 @@ namespace MediaManage.DataBaseHandler
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
+                builder.ConnectTimeout = 3; //*
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
                 }
+                builder.ConnectTimeout = 15;
                 return builder;
             }
             catch (Exception e)

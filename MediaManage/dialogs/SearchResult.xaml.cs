@@ -26,16 +26,16 @@ namespace MediaManage.dialogs
     public partial class SearchResult : Window
     {
         public List<Info> Infos { get; set; }
-        SqlConnectionStringBuilder builder;
-        string connectionString;
 
-        public SearchResult(string connectionString, string youtubeID, string title, string tagString)
+        public SearchResult(string[] connStrs, string youtubeID, string title, string tagString)
         {
-            this.connectionString = connectionString;
             Infos = new List<Info>();
-            builder = DataBaseHandler.DataBaseBuilder(connectionString);
-            var result = MediaManager.SQL_SearchBy_ITT(builder, youtubeID, title, tagString);
-            FoldResultOfITT(connectionString, result);
+            foreach (string connectionString in connStrs)
+            {
+                SqlConnectionStringBuilder builder = DataBaseHandler.DataBaseBuilder(connectionString);
+                var result = MediaManager.SQL_SearchBy_ITT(builder, youtubeID, title, tagString);
+                FoldResultOfITT(connectionString, result);
+            }
             InitializeComponent();
             this.DataContext = this;
         }

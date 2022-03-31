@@ -28,7 +28,6 @@ namespace MediaManage.dialogs
         TextBox tagTextBox;
         public List<string> UnSelectedList { get; set; }
         public List<String> SelectedList { get; set; }
-        SqlConnectionStringBuilder? builder;
         string tagString;
 
         public ChangeTag(TextBox textbox_tags, string connectionString)
@@ -38,12 +37,33 @@ namespace MediaManage.dialogs
             tagString = textbox_tags.Text;
             UnSelectedList = new List<string>();
             SelectedList = new List<string>();
-            
-            builder = DataBaseHandler.DataBaseBuilder(connectionString);
+
+            SqlConnectionStringBuilder builder = DataBaseHandler.DataBaseBuilder(connectionString);
             if (builder != null)
             {
                 string sql = "SELECT TagName FROM VideoTag";
                 MediaManager.MergeTag(builder, UnSelectedList);
+            }
+            DistributeTag();
+            this.DataContext = this;
+        }
+
+        public ChangeTag(TextBox textbox_tags, string[] connStrs)
+        {
+            InitializeComponent();
+            this.tagTextBox = textbox_tags;
+            tagString = textbox_tags.Text;
+            UnSelectedList = new List<string>();
+            SelectedList = new List<string>();
+
+            foreach (string connectionString in connStrs)
+            {
+                SqlConnectionStringBuilder builder = DataBaseHandler.DataBaseBuilder(connectionString);
+                if (builder != null)
+                {
+                    string sql = "SELECT TagName FROM VideoTag";
+                    MediaManager.MergeTag(builder, UnSelectedList);
+                }
             }
             DistributeTag();
             this.DataContext = this;

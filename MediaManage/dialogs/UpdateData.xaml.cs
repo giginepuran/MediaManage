@@ -96,7 +96,7 @@ namespace MediaManage.dialogs
             MediaManager.SQL_DeleteYTID(builder, oriInfo.YoutubeID);
             if (this.parent is SearchResult sr)
             {
-                sr.Infos.Remove(oriInfo);
+                var testing = sr.Infos.Remove(oriInfo);
                 sr.InfosGrid.Items.Refresh();
             }
             this.Close();
@@ -108,8 +108,6 @@ namespace MediaManage.dialogs
             MediaManager.SQL_UpdateInfo(builder, oriInfo, Info);
             if (this.parent is SearchResult sr)
             {
-                sr.Infos = (from info in sr.Infos
-                            select (info.YoutubeID == oriInfo.YoutubeID) ? Info : info).ToList();
                 oriInfo.YoutubeID = Info.YoutubeID;
                 oriInfo.Title = Info.Title;
                 oriInfo.ThumbnailUrl = Info.ThumbnailUrl;

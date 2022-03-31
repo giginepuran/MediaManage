@@ -16,13 +16,23 @@ namespace MediaManage.DataBaseHandler
         public static DataTable SQL_SearchBy_ITT(SqlConnectionStringBuilder builder, 
             string youtubeID, string title, string tagString)
         {
-            string sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy\ID_Title_Tag.sql");
-            sql = sql.Replace("__subID__", youtubeID);
-            sql = sql.Replace("__subTitle__", title);
-            var tags = from tag in tagString.Split(',')
-                       select $"N'{tag}'";
-            sql = sql.Replace("'__tags__'", string.Join(',', tags));
             DataTable dt = new DataTable();
+            string sql;
+            if (tagString != "")
+            {
+                sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy\ID_Title_Tag.sql");
+                sql = sql.Replace("__subID__", youtubeID);
+                sql = sql.Replace("__subTitle__", title);
+                var tags = from tag in tagString.Split(',')
+                           select $"N'{tag}'";
+                sql = sql.Replace("'__tags__'", string.Join(',', tags));
+            }
+            else
+            {
+                sql = System.IO.File.ReadAllText(sqlFolder + @"\SearchBy\ID_Title.sql");
+                sql = sql.Replace("__subID__", youtubeID);
+                sql = sql.Replace("__subTitle__", title);
+            }
             DataBaseHandler.SQLToDataBase(sql, builder, dt);
             return dt;
         }
@@ -50,6 +60,7 @@ namespace MediaManage.DataBaseHandler
                        {
                            Exist = g.Key,
                            Tags = from tag in g.AsEnumerable()
+                                  where tag != ""
                                   select $"N'{tag}'" // nvarchar format in sql
                        };
             IEnumerable<string> tags = Enumerable.Empty<string>();
@@ -58,9 +69,12 @@ namespace MediaManage.DataBaseHandler
                 tags = tags.Concat(add.Tags);
                 if (!add.Exist) // add.Exist == true, if tag exists in Table - VideoTag
                 {
-                    sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
-                    sql.Replace("__TagName__", string.Join(',', add.Tags));
-                    DataBaseHandler.SQLToDataBase(sql, builder);
+                    foreach (var tag in add.Tags)
+                    {
+                        sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
+                        sql = sql.Replace("N'__TagName__'", tag);
+                        DataBaseHandler.SQLToDataBase(sql, builder);
+                    }
                 }
             }
             sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Add.sql");
@@ -134,9 +148,12 @@ namespace MediaManage.DataBaseHandler
                 tags = tags.Concat(add.Tags);
                 if (!add.Exist) // add.Exist == true, if tag exists in Table - VideoTag
                 {
-                    sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
-                    sql.Replace("__TagName__", string.Join(',', add.Tags));
-                    DataBaseHandler.SQLToDataBase(sql, builder);
+                    foreach (var tag in add.Tags)
+                    {
+                        sql = System.IO.File.ReadAllText(sqlFolder + @"\VideoTag\Add.sql");
+                        sql = sql.Replace("N'__TagName__'", tag);
+                        DataBaseHandler.SQLToDataBase(sql, builder);
+                    }
                 }
             }
             sql = System.IO.File.ReadAllText(sqlFolder + @"\VideosTags\Add.sql");

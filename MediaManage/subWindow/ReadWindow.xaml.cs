@@ -23,26 +23,24 @@ namespace MediaManage.subWindow
     /// </summary>
     public partial class ReadWindow : Window
     {
-        string connectionString;
         public ReadWindow()
         {
             InitializeComponent();
-            //connectionString = "Server=localhost;Database=MediaManager;Integrated Security=True;";
-            connectionString = this.TextBox_ConnectionString.Text;
+            /* Default connectionStrings: 
+             * Server=localhost;Database=MediaManager;Integrated Security=True;,Server=localhost;Database=MM2;Integrated Security=True;
+             */
         }
-
-        
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchResult sr = new SearchResult(connectionString, 
+            SearchResult sr = new SearchResult(TextBox_ConnectionString.Text.Split(','), 
                 this.TextBox_ID.Text, this.TextBox_Title.Text, this.TextBox_Tags.Text);
             sr.ShowDialog();
         }
 
         private void ChangeTag(object sender, RoutedEventArgs e)
         {
-            ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, connectionString);
+            ChangeTag tagWindow = new ChangeTag(this.TextBox_Tags, TextBox_ConnectionString.Text.Split(','));
             tagWindow.ShowDialog();
         }
 
