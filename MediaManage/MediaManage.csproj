@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="SQL\" />
+    <Folder Include="DataBaseHandler\SQL\" />
   </ItemGroup>
 
 </Project>

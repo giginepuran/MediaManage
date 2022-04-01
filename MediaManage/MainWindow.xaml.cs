@@ -19,9 +19,9 @@ namespace MediaManage
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     using System.IO;
-    using classes;
-    using dialogs;
-    using subWindow;
+    using Classes;
+    using Dialogs;
+    using SubWindow;
 
     public partial class MainWindow : Window
     {

@@ -15,13 +15,13 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Data;
 
-namespace MediaManage.dialogs
+namespace MediaManage.Dialogs
 {
     /// <summary>
     /// Interaction logic for SearchResult.xaml
     /// </summary>
     
-    using classes;
+    using Classes;
     using DataBaseHandler;
     public partial class SearchResult : Window
     {

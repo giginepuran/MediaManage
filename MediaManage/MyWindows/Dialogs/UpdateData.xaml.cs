@@ -15,13 +15,13 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
 
-namespace MediaManage.dialogs
+namespace MediaManage.Dialogs
 {
     /// <summary>
     /// Interaction logic for UpdateData.xaml
     /// </summary>
 
-    using classes;
+    using Classes;
     using DataBaseHandler;
     public partial class UpdateData : Window
     { 

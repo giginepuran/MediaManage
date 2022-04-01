@@ -9,10 +9,10 @@ using System.Diagnostics;
 
 namespace MediaManage.DataBaseHandler
 {
-    using classes;
+    using Classes;
     public class MediaManager
     {
-        static string sqlFolder = @"C:\Users\clay0\source\repos\MediaManageDB\MediaManage\SQL";
+        static string sqlFolder = @"C:\Users\clay0\source\repos\MediaManageDB\MediaManage\DataBaseHandler\SQL";
         public static DataTable SQL_SearchBy_ITT(SqlConnectionStringBuilder builder, 
             string youtubeID, string title, string tagString)
         {

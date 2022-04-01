@@ -15,14 +15,14 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
 
-namespace MediaManage.subWindow
+namespace MediaManage.SubWindow
 {
     /// <summary>
     /// Interaction logic for CreateWindow.xaml
     /// </summary>
     using System.IO;
-    using classes;
-    using dialogs;
+    using Classes;
+    using Dialogs;
     using DataBaseHandler;
 
     public partial class CreateWindow : Window

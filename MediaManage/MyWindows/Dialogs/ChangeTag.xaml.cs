@@ -15,10 +15,10 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 
-namespace MediaManage.dialogs
+namespace MediaManage.Dialogs
 {
-    using classes;
-    using subWindow;
+    using Classes;
+    using SubWindow;
     using DataBaseHandler;
     /// <summary>
     /// Interaction logic for ChangeTag.xaml

@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 
-namespace MediaManage.subWindow
+namespace MediaManage.SubWindow
 {
     using System.IO;
-    using classes;
-    using dialogs;
+    using Classes;
+    using Dialogs;
     /// <summary>
     /// Interaction logic for ReadWindow.xaml
     /// </summary>
